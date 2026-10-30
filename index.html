@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RPS Music Talim Academy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-900 text-white min-h-screen">
-    <div id="root">
-      <div class="flex flex-col items-center justify-center h-screen space-y-4 p-6 text-center">
-        <h1 class="text-2xl font-bold text-yellow-400">RPS Music Talim Academy</h1>
-        <p class="text-sm text-gray-300">Website load ho rahi hai, kripya thoda pratiksha karein...</p>
-      </div>
-    </div>
-
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPS Music Talim Academy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react" src="./App.jsx"></script>
+</body>
 </html>
