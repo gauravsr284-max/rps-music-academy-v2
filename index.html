@@ -28,19 +28,16 @@
       const [isAdmin, setIsAdmin] = React.useState(false);
       const [pass, setPass] = React.useState('');
 
-      // Visitor Feedback / Requirement Box State
       const [visitorName, setVisitorName] = React.useState('');
       const [visitorPhone, setVisitorPhone] = React.useState('');
       const [visitorQuery, setVisitorQuery] = React.useState('');
       const [visitorInquiries, setVisitorInquiries] = React.useState([]);
 
-      // Gallery Photos (Saraswati Mata Default)
       const [photos, setPhotos] = React.useState([
         'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80'
       ]);
       const [newPhotoUrl, setNewPhotoUrl] = React.useState('');
 
-      // Motivational Tabla & Music Videos
       const [videos, setVideos] = React.useState([
         { id: 1, title: 'Banaras Gharana Tabla Solo (Motivation)', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
       ]);
@@ -61,7 +58,6 @@
         { id: 5, name: 'Vocal Student', sub: 'Vocal', phone: '9722334455' }
       ]);
 
-      // Shared Study Materials by Teachers
       const [studyMaterials, setStudyMaterials] = React.useState([
         { id: 1, sub: 'Tabla', title: 'Tabla Basic Beats PDF', link: '#' }
       ]);
@@ -73,7 +69,6 @@
       const [msgText, setMsgText] = React.useState('');
       const [adminMsgs, setAdminMsgs] = React.useState([]);
 
-      // Teacher to Admin report state
       const [tReportText, setTReportText] = React.useState('');
       const [teacherReports, setTeacherReports] = React.useState([]);
 
@@ -142,7 +137,6 @@
                   </button>
                 </div>
 
-                {/* Visitor Question & Requirement Box */}
                 <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
                   <h3 className="font-bold text-yellow-400 text-xs text-center">Aapka Sawaal ya Requirement bhejein</h3>
                   <p className="text-[10px] text-gray-300 text-center">Humein batayein aapko kis tarah ki sangeet shiksha ya jankari chahiye.</p>
@@ -162,7 +156,6 @@
                   </div>
                 </div>
 
-                {/* Motivational & Performance Videos */}
                 <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
                   <h3 className="font-bold text-yellow-400 text-xs text-center">Motivational Tabla & Music Videos</h3>
                   {videos.map(v => (
@@ -175,7 +168,6 @@
                   ))}
                 </div>
 
-                {/* Saraswati Mata & Gallery Photos */}
                 <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
                   <h3 className="font-bold text-yellow-400 text-xs text-center">Maa Saraswati & Academy Gallery</h3>
                   <div className="space-y-2">
@@ -206,7 +198,6 @@
                   )}
                 </div>
 
-                {/* Study Material Section for Students */}
                 <div className="bg-gray-800 p-2.5 rounded space-y-2">
                   <p className="font-bold text-yellow-300">Study Material & Notes (Teachers Uploaded):</p>
                   {studyMaterials.length === 0 ? (
@@ -279,7 +270,6 @@
                       <p className="text-[10px] text-gray-400">Total Students: {students.filter(s => s.sub === tSub).length}</p>
                     </div>
 
-                    {/* Teacher Study Material Upload Box */}
                     <div className="bg-gray-800 p-2.5 rounded space-y-2 border border-yellow-600/40">
                       <p className="font-bold text-yellow-300 text-[11px]">Upload Study Material / PDF / Photo for Students:</p>
                       <input type="text" value={matTitle} onChange={e => setMatTitle(e.target.value)} placeholder="Material Title (jaise: Alankar PDF)..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
@@ -292,7 +282,6 @@
                       }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Upload Material</button>
                     </div>
 
-                    {/* Teacher to Admin Report Box */}
                     <div className="bg-gray-800 p-2.5 rounded space-y-2 border border-yellow-600/40">
                       <p className="font-bold text-yellow-300 text-[11px]">Report Student Issue / Requirement to Admin:</p>
                       <textarea rows="2" value={tReportText} onChange={e => setTReportText(e.target.value)} placeholder="Student ka naam, kya bola/kiya ya requirement hai yahan likhein..." className="w-full bg-gray-900 p-2 rounded text-white text-xs"></textarea>
@@ -304,4 +293,15 @@
                       }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Send Report to Admin</button>
                     </div>
 
-                    <button onCl
+                    <button onClick={() => { setApproved(true); alert('Class started for students!'); }} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Start Class</button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {role === 'admin' && (
+              <div className="bg-gray-900/90 rounded-lg p-3 border border-red-500 space-y-3">
+                <h2 className="text-sm font-bold text-red-400">Admin Dashboard</h2>
+                {!isAdmin ? (
+                  <div className="space-y-2">
+                    <input type="password" va
