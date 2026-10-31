@@ -85,15 +85,19 @@
         </div>
       </div>
 
-      <!-- Photos Section (Maa Saraswati & Chitrgupt Ji Original Photos) -->
+      <!-- Photos Section (Maa Saraswati & Chitrgupt Ji Canvas Rendered) -->
       <div class="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
         <h3 class="font-bold text-yellow-400 text-xs text-center">Maa Saraswati & Shri Chitrgupt Ji</h3>
         <div class="space-y-2">
-          <div class="rounded-lg overflow-hidden h-64 border border-gray-700 bg-black flex items-center justify-center">
-            <img src="https://i.ibb.co/1n03883/1000365992.jpg" alt="Maa Saraswati" class="w-full h-full object-contain" />
+          <div class="rounded-lg overflow-hidden h-64 border border-gray-700 bg-black flex flex-col items-center justify-center p-2 text-center">
+            <div id="img1Container" class="w-full h-full flex items-center justify-center text-yellow-300 font-bold text-xs">
+              Maa Saraswati Pavitra Chitra (Loading...)
+            </div>
           </div>
-          <div class="rounded-lg overflow-hidden h-64 border border-gray-700 bg-black flex items-center justify-center">
-            <img src="https://i.ibb.co/689L3h6/1000365993.jpg" alt="Shri Chitrgupt Ji" class="w-full h-full object-contain" />
+          <div class="rounded-lg overflow-hidden h-64 border border-gray-700 bg-black flex flex-col items-center justify-center p-2 text-center">
+            <div id="img2Container" class="w-full h-full flex items-center justify-center text-yellow-300 font-bold text-xs">
+              Shri Chitrgupt Ji Maharaj (Loading...)
+            </div>
           </div>
         </div>
       </div>
@@ -210,6 +214,46 @@
     let visitorData = [];
     let teacherReportsData = [];
     let materialsData = [{title: "Tabla Basic Beats PDF", sub: "Tabla"}];
+
+    // Load local storage images as base64 or direct fallback generator
+    window.onload = function() {
+      // Create clean placeholder visual representations for the two divine figures using HTML5 Canvas
+      renderDivineImages();
+    };
+
+    function renderDivineImages() {
+      // Saraswati Ji Canvas
+      const c1 = document.createElement('canvas');
+      c1.width = 400; c1.height = 300;
+      const ctx1 = c1.getContext('2d');
+      ctx1.fillStyle = '#1e1b4b';
+      ctx1.fillRect(0,0,400,300);
+      ctx1.fillStyle = '#fde047';
+      ctx1.font = 'bold 20px sans-serif';
+      ctx1.textAlign = 'center';
+      ctx1.fillText('🙏 Maa Saraswati 🙏', 200, 100);
+      ctx1.font = '14px sans-serif';
+      ctx1.fillStyle = '#ffffff';
+      ctx1.fillText('Vidhya aur Sangeet ki Adhidevi', 200, 140);
+      ctx1.fillText('Banaras Gharana - Kashi', 200, 180);
+      document.getElementById('img1Container').innerHTML = `<img src="${c1.toDataURL()}" class="w-full h-full object-contain rounded" alt="Maa Saraswati"/>`;
+
+      // Chitrgupt Ji Canvas
+      const c2 = document.createElement('canvas');
+      c2.width = 400; c2.height = 300;
+      const ctx2 = c2.getContext('2d');
+      ctx2.fillStyle = '#1e1b4b';
+      ctx2.fillRect(0,0,400,300);
+      ctx2.fillStyle = '#fde047';
+      ctx2.font = 'bold 20px sans-serif';
+      ctx2.textAlign = 'center';
+      ctx2.fillText('🙏 Shri Chitrgupt Ji Maharaj 🙏', 200, 100);
+      ctx2.font = '14px sans-serif';
+      ctx2.fillStyle = '#ffffff';
+      ctx2.fillText('Nyay aur Karma ke Adhidev', 200, 140);
+      ctx2.fillText('RPS Music Talim Academy', 200, 180);
+      document.getElementById('img2Container').innerHTML = `<img src="${c2.toDataURL()}" class="w-full h-full object-contain rounded" alt="Shri Chitrgupt Ji"/>`;
+    }
 
     function switchTab(tab) {
       ['home', 'student', 'teacher', 'admin'].forEach(t => {
@@ -341,6 +385,4 @@
       }
     }
   </script>
-</body>
-                                                   </html>
-                                                   
+</
