@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RPS Music Talim Academy</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     body {
-      background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1571536802807-30551f39f375?auto=format&fit=crop&w=1200&q=80');
+      background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.92)), url('https://images.unsplash.com/photo-1571536802807-30551f39f375?auto=format&fit=crop&w=1200&q=80');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -73,7 +73,7 @@
       const [teacherReports, setTeacherReports] = React.useState([]);
 
       const formatVideoUrl = (url) => {
-        if(url.includes('watch?v=')) {
+        if(url && url.includes('watch?v=')) {
           return url.replace('watch?v=', 'embed/');
         }
         return url;
@@ -304,4 +304,4 @@
                 <h2 className="text-sm font-bold text-red-400">Admin Dashboard</h2>
                 {!isAdmin ? (
                   <div className="space-y-2">
-                    <input type="password" va
+                    <input type="password" value={pass} onChange={e => s
