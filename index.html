@@ -10,7 +10,7 @@
   <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     body {
-      background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.92)), url('https://images.unsplash.com/photo-1571536802807-30551f39f375?auto=format&fit=crop&w=1200&q=80');
+      background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1571536802807-30551f39f375?auto=format&fit=crop&w=1200&q=80');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -28,14 +28,21 @@
       const [isAdmin, setIsAdmin] = React.useState(false);
       const [pass, setPass] = React.useState('');
 
-      // Media Management States
+      // Visitor Feedback / Requirement Box State
+      const [visitorName, setVisitorName] = React.useState('');
+      const [visitorPhone, setVisitorPhone] = React.useState('');
+      const [visitorQuery, setVisitorQuery] = React.useState('');
+      const [visitorInquiries, setVisitorInquiries] = React.useState([]);
+
+      // Gallery Photos (Saraswati Mata Default)
       const [photos, setPhotos] = React.useState([
-        'https://images.unsplash.com/photo-1571536802807-30551f39f375?auto=format&fit=crop&w=800&q=80'
+        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80'
       ]);
       const [newPhotoUrl, setNewPhotoUrl] = React.useState('');
 
+      // Motivational Tabla & Music Videos
       const [videos, setVideos] = React.useState([
-        { id: 1, title: 'Tabla Solo Performance', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+        { id: 1, title: 'Banaras Gharana Tabla Solo (Motivation)', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
       ]);
       const [newVideoTitle, setNewVideoTitle] = React.useState('');
       const [newVideoUrl, setNewVideoUrl] = React.useState('');
@@ -53,19 +60,40 @@
         { id: 4, name: 'Piano / Harmonium Student', sub: 'Piano / Harmonium', phone: '9811223344' },
         { id: 5, name: 'Vocal Student', sub: 'Vocal', phone: '9722334455' }
       ]);
-      const [matText, setMatText] = React.useState('');
-      const [selStu, setSelStu] = React.useState(1);
+
+      // Shared Study Materials by Teachers
+      const [studyMaterials, setStudyMaterials] = React.useState([
+        { id: 1, sub: 'Tabla', title: 'Tabla Basic Beats PDF', link: '#' }
+      ]);
+      const [matTitle, setMatTitle] = React.useState('');
+      const [matLink, setMatLink] = React.useState('');
 
       const [approved, setApproved] = React.useState(false);
       const [inCall, setInCall] = React.useState(false);
       const [msgText, setMsgText] = React.useState('');
       const [adminMsgs, setAdminMsgs] = React.useState([]);
 
+      // Teacher to Admin report state
+      const [tReportText, setTReportText] = React.useState('');
+      const [teacherReports, setTeacherReports] = React.useState([]);
+
       const formatVideoUrl = (url) => {
         if(url.includes('watch?v=')) {
           return url.replace('watch?v=', 'embed/');
         }
         return url;
+      };
+
+      const shareWebsite = () => {
+        if (navigator.share) {
+          navigator.share({
+            title: 'RPS Music Talim Academy',
+            text: 'Banaras Gharana se Sitar, Tabla, Guitar aur Vocal ki shiksha ke liye judein!',
+            url: window.location.href,
+          }).catch(() => {});
+        } else {
+          prompt('Website Link copy karein:', window.location.href);
+        }
       };
 
       return (
@@ -91,20 +119,52 @@
             {role === 'home' && (
               <div className="space-y-3">
                 <div className="bg-gray-900/90 border border-yellow-600/50 rounded-xl p-4 text-center space-y-3">
-                  <h2 className="text-sm font-bold text-yellow-400">Banaras Gharana Music Center</h2>
+                  <h2 className="text-sm font-bold text-yellow-400">Kashi Ghat - Banaras Gharana Music Center</h2>
                   <p className="text-[10px] text-gray-200">Sitar, Tabla, Guitar, Piano/Harmonium & Vocal Training.</p>
-                  <div className="space-y-1 text-[11px] text-left bg-gray-800 p-2.5 rounded">
-                    <p className="font-bold text-yellow-300">Fee Structure:</p>
-                    <p>🇮🇳 Indian: ₹1,500 - ₹3,000 / month</p>
-                    <p>🌍 Foreign: $60 - $120 / month</p>
+                  
+                  <div className="space-y-1.5 text-[11px] text-left bg-gray-800 p-3 rounded">
+                    <p className="font-bold text-yellow-300 text-center pb-1">Fee Structure & Admission</p>
+                    <p>🇮🇳 <b>Domestic Students:</b></p>
+                    <p className="pl-2">• Registration Fee: ₹99 (One-Time)</p>
+                    <p className="pl-2">• Tabla Classes: ₹1,200 / month</p>
+                    <p className="pl-2">• Other Instruments: ₹1,500 / month</p>
+                    <hr className="border-gray-700 my-1"/>
+                    <p>🌍 <b>Foreign Students:</b></p>
+                    <p className="pl-2">• Tabla & Other Instruments: Standard Global Rates ($60 - $120 / month)</p>
                   </div>
+
                   <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxQ/viewform" target="_blank" rel="noreferrer" className="block bg-yellow-500 text-gray-900 px-3 py-2 rounded-full font-bold">
                     Register via Google Form
                   </a>
+
+                  <button onClick={shareWebsite} className="w-full bg-blue-600 text-white px-3 py-2 rounded-full font-bold flex items-center justify-center gap-1">
+                    🔗 Invite Your Friend (Share Website)
+                  </button>
                 </div>
 
+                {/* Visitor Question & Requirement Box */}
                 <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
-                  <h3 className="font-bold text-yellow-400 text-xs text-center">Academy Performance Videos</h3>
+                  <h3 className="font-bold text-yellow-400 text-xs text-center">Aapka Sawaal ya Requirement bhejein</h3>
+                  <p className="text-[10px] text-gray-300 text-center">Humein batayein aapko kis tarah ki sangeet shiksha ya jankari chahiye.</p>
+                  <div className="space-y-2 bg-gray-800 p-2.5 rounded">
+                    <input type="text" value={visitorName} onChange={e => setVisitorName(e.target.value)} placeholder="Aapka Naam..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    <input type="text" value={visitorPhone} onChange={e => setVisitorPhone(e.target.value)} placeholder="WhatsApp Number..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    <textarea rows="2" value={visitorQuery} onChange={e => setVisitorQuery(e.target.value)} placeholder="Apna sawal ya requirement yahan likhein..." className="w-full bg-gray-900 p-2 rounded text-white text-xs"></textarea>
+                    <button onClick={() => {
+                      if(!visitorName || !visitorQuery) {
+                        alert('Kripya naam aur apna sawal/requirement bharein!');
+                        return;
+                      }
+                      setVisitorInquiries([...visitorInquiries, { name: visitorName, phone: visitorPhone, query: visitorQuery, time: new Date().toLocaleTimeString() }]);
+                      setVisitorName(''); setVisitorPhone(''); setVisitorQuery('');
+                      alert('Aapka sandesh Admin tak pahunch gaya hai. Dhanyawad!');
+                    }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Send to Admin</button>
+                  </div>
+                </div>
+
+                {/* Motivational & Performance Videos */}
+                <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
+                  <h3 className="font-bold text-yellow-400 text-xs text-center">Motivational Tabla & Music Videos</h3>
                   {videos.map(v => (
                     <div key={v.id} className="space-y-1 bg-gray-800 p-2 rounded">
                       <p className="font-bold text-[11px] text-yellow-300">{v.title}</p>
@@ -115,12 +175,13 @@
                   ))}
                 </div>
 
+                {/* Saraswati Mata & Gallery Photos */}
                 <div className="bg-gray-900/90 border border-yellow-500/40 rounded-xl p-3 space-y-2">
-                  <h3 className="font-bold text-yellow-400 text-xs text-center">Academy Gallery Photos</h3>
+                  <h3 className="font-bold text-yellow-400 text-xs text-center">Maa Saraswati & Academy Gallery</h3>
                   <div className="space-y-2">
                     {photos.map((p, idx) => (
                       <div key={idx} className="rounded-lg overflow-hidden h-40 border border-gray-700">
-                        <img src={p} alt="Academy Gallery" className="w-full h-full object-cover" />
+                        <img src={p} alt="Maa Saraswati / Gallery" className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
@@ -144,10 +205,27 @@
                     </div>
                   )}
                 </div>
-                <div className="bg-gray-800 p-2 rounded space-y-1">
-                  <p className="font-bold text-yellow-300">Study Material (Admin sent):</p>
-                  <p className="text-[11px] bg-gray-900 p-2 rounded text-gray-200">📚 Notes: Tabla Beats & Alankars</p>
+
+                {/* Study Material Section for Students */}
+                <div className="bg-gray-800 p-2.5 rounded space-y-2">
+                  <p className="font-bold text-yellow-300">Study Material & Notes (Teachers Uploaded):</p>
+                  {studyMaterials.length === 0 ? (
+                    <p className="text-gray-400 text-[10px]">Abhi koi study material uplabdh nahi hai.</p>
+                  ) : (
+                    studyMaterials.map((m) => (
+                      <div key={m.id} className="bg-gray-900 p-2 rounded flex justify-between items-center text-[11px]">
+                        <div>
+                          <p className="font-bold text-yellow-400">📚 {m.title}</p>
+                          <p className="text-[9px] text-gray-400">Subject: {m.sub}</p>
+                        </div>
+                        <a href={m.link !== '#' ? m.link : '#'} target="_blank" rel="noreferrer" onClick={(e) => { if(m.link === '#') { e.preventDefault(); alert('Yeh demo material hai.'); }}} className="bg-yellow-500 text-gray-900 px-2.5 py-1 rounded font-bold text-[10px]">
+                          Download / View
+                        </a>
+                      </div>
+                    ))
+                  )}
                 </div>
+
                 <div className="bg-gray-800 p-2.5 rounded space-y-2">
                   <p className="font-bold text-yellow-300">Private Message to Admin:</p>
                   <textarea rows="2" value={msgText} onChange={e => setMsgText(e.target.value)} placeholder="Message..." className="w-full bg-gray-900 p-2 rounded text-white"></textarea>
@@ -170,11 +248,15 @@
                     </select>
                     <input type="text" value={tPhone} onChange={e => setTPhone(e.target.value)} placeholder="WhatsApp Number" className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
                     <input type="password" value={tPass} onChange={e => setTPass(e.target.value)} placeholder="Teacher Code (5678)" className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
-                    <div className="bg-red-950/50 border border-red-500 p-2 rounded text-[10px]">
-                      <p className="font-bold text-red-400">T&C:</p>
+                    <div className="bg-red-950/50 border border-red-500 p-2 rounded text-[10px] space-y-1">
+                      <p className="font-bold text-red-400">T&C & Academy Rules:</p>
+                      <p>• No anger/harassment with students allowed.</p>
+                      <p>• Direct student se bahas/jawab nahi dena hai, student issue/requirement seedhe Admin ko batana hai.</p>
+                      <p>• Koi bhi fraud many nahi hoga.</p>
+                      <p>• Teacher aur student ke beech kisi bhi galat ya kanooni maamle ki zimmedari Academy ki nahi hogi.</p>
                       <p>• Referral: 97% | Normal: 60%</p>
                       <label className="flex items-center gap-1 pt-1 font-bold text-yellow-300">
-                        <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} /> Accept T&C
+                        <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} /> Accept T&C & Rules
                       </label>
                     </div>
                     <button onClick={() => {
@@ -186,6 +268,7 @@
                 ) : (
                   <div className="space-y-3">
                     <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ {tSub} Teacher Portal Active</div>
+                    
                     <div className="bg-gray-800 p-3 rounded space-y-2">
                       <p className="font-bold text-yellow-300 text-xs">Aapke Department ke Students:</p>
                       {students.filter(s => s.sub === tSub).map(s => (
@@ -195,92 +278,30 @@
                       ))}
                       <p className="text-[10px] text-gray-400">Total Students: {students.filter(s => s.sub === tSub).length}</p>
                     </div>
-                    <button onClick={() => { setApproved(true); alert('Class started for students!'); }} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Start Class</button>
-                  </div>
-                )}
-              </div>
-            )}
 
-            {role === 'admin' && (
-              <div className="bg-gray-900/90 rounded-lg p-3 border border-red-500 space-y-3">
-                <h2 className="text-sm font-bold text-red-400">Admin Dashboard</h2>
-                {!isAdmin ? (
-                  <div className="space-y-2">
-                    <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password (1234)" className="w-full bg-gray-800 p-2 rounded text-white text-xs" />
-                    <button onClick={() => { if(pass === '1234') setIsAdmin(true); else alert('Wrong!'); }} className="w-full bg-red-600 font-bold p-1.5 rounded">Login</button>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ Admin Verified</div>
-                    
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Add New Video Clip:</p>
-                      <input type="text" value={newVideoTitle} onChange={e => setNewVideoTitle(e.target.value)} placeholder="Video Title..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
-                      <input type="text" value={newVideoUrl} onChange={e => setNewVideoUrl(e.target.value)} placeholder="YouTube Embed / Direct URL..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    {/* Teacher Study Material Upload Box */}
+                    <div className="bg-gray-800 p-2.5 rounded space-y-2 border border-yellow-600/40">
+                      <p className="font-bold text-yellow-300 text-[11px]">Upload Study Material / PDF / Photo for Students:</p>
+                      <input type="text" value={matTitle} onChange={e => setMatTitle(e.target.value)} placeholder="Material Title (jaise: Alankar PDF)..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                      <input type="text" value={matLink} onChange={e => setMatLink(e.target.value)} placeholder="Paste File / Google Drive / Image Link..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
                       <button onClick={() => {
-                        if(newVideoTitle && newVideoUrl) {
-                          setVideos([...videos, { id: Date.now(), title: newVideoTitle, url: formatVideoUrl(newVideoUrl) }]);
-                          setNewVideoTitle(''); setNewVideoUrl(''); alert('Video added!');
-                        }
-                      }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Add Video</button>
-                      
-                      <div className="pt-2 space-y-1">
-                        <p className="text-[10px] text-gray-300 font-bold">Manage Existing Videos:</p>
-                        {videos.map(v => (
-                          <div key={v.id} className="flex justify-between items-center bg-gray-900 p-1.5 rounded text-[10px]">
-                            <span className="truncate w-36">{v.title}</span>
-                            <button onClick={() => setVideos(videos.filter(item => item.id !== v.id))} className="bg-red-600 px-2 py-0.5 rounded text-white font-bold">Delete</button>
-                          </div>
-                        ))}
-                      </div>
+                        if(!matTitle || !matLink) { alert('Material title aur link dono bharein!'); return; }
+                        setStudyMaterials([...studyMaterials, { id: Date.now(), sub: tSub, title: matTitle, link: matLink }]);
+                        setMatTitle(''); setMatLink('');
+                        alert('Study material safaltapurvak upload ho gaya hai!');
+                      }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Upload Material</button>
                     </div>
 
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Add Gallery Photo URL:</p>
-                      <input type="text" value={newPhotoUrl} onChange={e => setNewPhotoUrl(e.target.value)} placeholder="Direct Image URL..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    {/* Teacher to Admin Report Box */}
+                    <div className="bg-gray-800 p-2.5 rounded space-y-2 border border-yellow-600/40">
+                      <p className="font-bold text-yellow-300 text-[11px]">Report Student Issue / Requirement to Admin:</p>
+                      <textarea rows="2" value={tReportText} onChange={e => setTReportText(e.target.value)} placeholder="Student ka naam, kya bola/kiya ya requirement hai yahan likhein..." className="w-full bg-gray-900 p-2 rounded text-white text-xs"></textarea>
                       <button onClick={() => {
-                        if(newPhotoUrl) {
-                          setPhotos([...photos, newPhotoUrl]);
-                          setNewPhotoUrl(''); alert('Photo added to gallery!');
-                        }
-                      }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Add Photo</button>
-                      
-                      <div className="pt-2 space-y-1">
-                        <p className="text-[10px] text-gray-300 font-bold">Manage Gallery Photos:</p>
-                        {photos.map((p, idx) => (
-                          <div key={idx} className="flex justify-between items-center bg-gray-900 p-1.5 rounded text-[10px]">
-                            <span className="truncate w-36">Photo #{idx+1}</span>
-                            <button onClick={() => setPhotos(photos.filter((_, i) => i !== idx))} className="bg-red-600 px-2 py-0.5 rounded text-white font-bold">Delete</button>
-                          </div>
-                        ))}
-                      </div>
+                        if(!tReportText) { alert('Kripya details bharein!'); return; }
+                        setTeacherReports([...teacherReports, { sub: tSub, phone: tPhone, report: tReportText, time: new Date().toLocaleTimeString() }]);
+                        setTReportText('');
+                        alert('Report Admin tak bhej di gayi hai!');
+                      }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Send Report to Admin</button>
                     </div>
 
-                    <button onClick={() => { setApproved(true); alert('Class Connected!'); }} className="w-full bg-green-600 font-bold p-1.5 rounded">Approve & Connect Class</button>
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Send Study Material to Student:</p>
-                      <select value={selStu} onChange={e => setSelStu(Number(e.target.value))} className="w-full bg-gray-900 p-2 rounded text-white text-xs">
-                        {students.map(s => <option key={s.id} value={s.id}>{s.name} ({s.sub})</option>)}
-                      </select>
-                      <input type="text" value={matText} onChange={e => setMatText(e.target.value)} placeholder="Material note..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
-                      <button onClick={() => { if(matText) { setMatText(''); alert('Material sent!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Send Material</button>
-                    </div>
-                    <div className="bg-gray-800 p-2 rounded space-y-1">
-                      <p className="font-bold text-yellow-300 text-[11px]">Student Messages:</p>
-                      {adminMsgs.length === 0 ? <p className="text-gray-400 text-[10px]">No messages.</p> : adminMsgs.map((m, i) => <div key={i} className="text-[10px] bg-gray-900 p-1 rounded">👤 {m}</div>)}
-                    </div>
-                    <input type="text" value={newNotice} onChange={e => setNewNotice(e.target.value)} placeholder="Publish notice..." className="w-full bg-gray-800 p-2 rounded text-white text-xs" />
-                    <button onClick={() => { if(newNotice) { setNotices([newNotice, ...notices]); setNewNotice(''); alert('Published!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Publish Notice</button>
-                  </div>
-                )}
-              </div>
-            )}
-          </main>
-        </div>
-      );
-    }
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
-</body>
-  </html>
-  
+                    <button onCl
