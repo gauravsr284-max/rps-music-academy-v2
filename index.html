@@ -10,7 +10,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     body {
-      background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1000&q=80');
+      background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -19,67 +19,49 @@
 </head>
 <body class="text-white min-h-screen">
   <div id="root"></div>
-
   <script type="text/babel">
     function App() {
       const [role, setRole] = React.useState('home');
-      const [notices, setNotices] = React.useState(['RPS Music Talim Academy - Banaras Gharana Kashi. Naye batches shuru hain!']);
+      const [notices, setNotices] = React.useState(['RPS Music Talim Academy - Kashi. Naye batches shuru hain!']);
       const [newNotice, setNewNotice] = React.useState('');
       
-      const [bannerImg, setBannerImg] = React.useState('https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=800&q=80');
-      const [newImgUrl, setNewImgUrl] = React.useState('');
-
-      // Admin State
       const [isAdmin, setIsAdmin] = React.useState(false);
       const [pass, setPass] = React.useState('');
 
-      // Teacher State & Departments
-      const [isTeacherLoggedIn, setIsTeacherLoggedIn] = React.useState(false);
+      const [isTeacher, setIsTeacher] = React.useState(false);
       const [tName, setTName] = React.useState('');
+      const [tSub, setTSub] = React.useState('Tabla');
       const [tPhone, setTPhone] = React.useState('');
-      const [tSubject, setTSubject] = React.useState('Tabla');
       const [tPass, setTPass] = React.useState('');
       const [agreed, setAgreed] = React.useState(false);
-      const [teachersList, setTeachersList] = React.useState([]);
 
-      // Students Database (Admin manage karega kis student ko kis teacher ke under daalna hai)
       const [students, setStudents] = React.useState([
-        { id: 1, name: 'Aman Sharma', subject: 'Tabla', phone: '9876543210', studyMaterial: 'Tabla Basic Beats PDF' },
-        { id: 2, name: 'Priya Singh', subject: 'Sitar', phone: '9123456789', studyMaterial: 'Sitar Alankar Notes' },
-        { id: 3, name: 'Rahul Verma', subject: 'Guitar', phone: '9988776655', studyMaterial: 'Guitar Chords Chart' },
-        { id: 4, name: 'Sneha Gupta', subject: 'Piano / Harmonium', phone: '9811223344', studyMaterial: 'Harmonium Scale Guide' },
-        { id: 5, name: 'Amit Mishra', subject: 'Vocal', phone: '9722334455', studyMaterial: 'Vocal Raag Yaman PDF' }
+        { id: 1, name: 'Aman', sub: 'Tabla', phone: '9876543210', material: 'Tabla Beats PDF' },
+        { id: 2, name: 'Priya', sub: 'Sitar', phone: '9123456789', material: 'Sitar Notes' },
+        { id: 3, name: 'Rahul', sub: 'Guitar', phone: '9988776655', material: 'Guitar Chords' },
+        { id: 4, name: 'Sneha', sub: 'Piano / Harmonium', phone: '9811223344', material: 'Harmonium Scale' },
+        { id: 5, name: 'Amit', sub: 'Vocal', phone: '9722334455', material: 'Vocal Alankar' }
       ]);
-      const [newStudentName, setNewStudentName] = React.useState('');
-      const [newStudentSub, setNewStudentSub] = React.useState('Tabla');
-      const [newStudentPhone, setNewStudentPhone] = React.useState('');
-      const [materialText, setMaterialText] = React.useState('');
-      const [selectedStudentId, setSelectedStudentId] = React.useState(1);
+      const [matText, setMatText] = React.useState('');
+      const [selStu, setSelStu] = React.useState(1);
 
-      // Live Class States (2 Platforms: Jitsi & Google Meet)
-      const [platform, setPlatform] = React.useState('jitsi');
-      const [meetLink, setMeetLink] = React.useState('RPSMusicAcademyLive');
       const [approved, setApproved] = React.useState(false);
       const [inCall, setInCall] = React.useState(false);
-
-      // Messaging
-      const [studentMsgs, setStudentMsgs] = React.useState([]);
       const [msgText, setMsgText] = React.useState('');
+      const [adminMsgs, setAdminMsgs] = React.useState([]);
 
       return (
-        <div className="min-h-screen text-white font-sans pb-12">
-          {/* Notification Marquee Bar */}
-          <div className="bg-yellow-500 text-gray-900 py-1.5 px-2 text-center font-bold text-xs shadow">
+        <div className="min-h-screen text-white font-sans pb-10">
+          <div className="bg-yellow-500 text-gray-900 py-1 px-2 text-center font-bold text-xs">
             <marquee>{notices.join(" || ")}</marquee>
           </div>
 
-          {/* Header */}
-          <header className="bg-gray-900/90 border-b border-gray-700 py-2.5 px-3 flex justify-between items-center flex-wrap gap-2 shadow backdrop-blur">
+          <header className="bg-gray-900/90 border-b border-gray-700 p-3 flex justify-between items-center flex-wrap gap-2">
             <div>
               <h1 className="text-xs font-bold text-yellow-400">RPS Music Talim Academy</h1>
               <p className="text-[9px] text-gray-300">Founder: Gaurav Srivastava | Kashi</p>
             </div>
-            <div className="flex gap-1 text-[11px]">
+            <div className="flex gap-1 text-xs">
               <button onClick={() => setRole('home')} className={`px-2 py-1 rounded ${role==='home'?'bg-yellow-500 text-gray-900 font-bold':'bg-gray-800'}`}>Home</button>
               <button onClick={() => setRole('student')} className={`px-2 py-1 rounded ${role==='student'?'bg-yellow-500 text-gray-900 font-bold':'bg-gray-800'}`}>Student</button>
               <button onClick={() => setRole('teacher')} className={`px-2 py-1 rounded ${role==='teacher'?'bg-yellow-500 text-gray-900 font-bold':'bg-gray-800'}`}>Teacher</button>
@@ -88,201 +70,130 @@
           </header>
 
           <main className="max-w-md mx-auto p-3 space-y-3 text-xs">
-            
-            {/* HOME SECTION */}
             {role === 'home' && (
-              <div className="space-y-3">
-                <div className="bg-gray-900/90 border border-yellow-600/50 rounded-xl p-3 text-center shadow-xl space-y-2 backdrop-blur">
-                  <h2 className="text-sm font-bold text-yellow-400">Banaras Gharana Tabla & Music Center</h2>
-                  <p className="text-[10px] text-gray-200">Kashi se Sitar, Tabla, Guitar, Piano/Harmonium & Vocal ki professional training.</p>
-                  
-                  <div className="rounded-lg overflow-hidden h-36 border border-gray-700 shadow-inner">
-                    <img src={bannerImg} alt="Academy Banner" className="w-full h-full object-cover" />
-                  </div>
-
-                  <a href="https://forms.gle/YOUR_GOOGLE_FORM" target="_blank" rel="noreferrer" className="block bg-yellow-500 text-gray-900 px-3 py-2 rounded-full font-bold shadow">
-                    Register via Google Form
-                  </a>
+              <div className="bg-gray-900/90 border border-yellow-600/50 rounded-xl p-4 text-center space-y-3">
+                <h2 className="text-sm font-bold text-yellow-400">Banaras Gharana Music Center</h2>
+                <p className="text-[10px] text-gray-200">Sitar, Tabla, Guitar, Piano/Harmonium & Vocal Training.</p>
+                <div className="space-y-1 text-[11px] text-left bg-gray-800 p-2.5 rounded">
+                  <p className="font-bold text-yellow-300">Fee Structure:</p>
+                  <p>🇮🇳 Indian: ₹1,500 - ₹3,000 / month</p>
+                  <p>🌍 Foreign: $60 - $120 / month</p>
                 </div>
-
-                <div className="bg-gray-900/90 rounded-lg p-3 border border-gray-700 space-y-2 shadow backdrop-blur">
-                  <h3 className="font-bold text-yellow-400 border-b border-gray-700 pb-1 text-center">Departments & Fee Structure</h3>
-                  <div className="space-y-1.5 text-[11px]">
-                    <p className="text-yellow-300 font-bold">🎵 Specializations:</p>
-                    <p>• Tabla Teacher Room | Sitar Teacher Room</p>
-                    <p>• Guitar Teacher Room | Piano/Harmonium Room | Vocal Teacher Room</p>
-                  </div>
-                  <div className="space-y-1 text-[11px] pt-1.5 border-t border-gray-800">
-                    <p className="font-bold text-yellow-300">🇮🇳 Indian / 🌍 Foreign Fee:</p>
-                    <p>• Indian: ₹1,500 - ₹3,000/mo | Foreign: $60 - $120/mo</p>
-                  </div>
-                </div>
+                <a href="https://forms.gle/YOUR_GOOGLE_FORM" target="_blank" rel="noreferrer" className="block bg-yellow-500 text-gray-900 px-3 py-2 rounded-full font-bold">
+                  Register via Google Form
+                </a>
               </div>
             )}
 
-            {/* STUDENT PORTAL */}
             {role === 'student' && (
-              <div className="bg-gray-900/90 rounded-lg p-3 border border-gray-700 space-y-3 shadow backdrop-blur">
+              <div className="bg-gray-900/90 rounded-lg p-3 border border-gray-700 space-y-3">
                 <h2 className="text-sm font-bold text-yellow-400">Student Portal</h2>
-                
                 <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                  <p className="font-bold text-yellow-300">Live Video Class (Jitsi / Google Meet):</p>
+                  <p className="font-bold text-yellow-300">Live Video Class:</p>
                   {!approved ? (
-                    <button onClick={() => alert('Request sent to Admin!')} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Request Admin to Connect Class</button>
+                    <button onClick={() => alert('Request sent!')} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Request Admin to Connect</button>
                   ) : !inCall ? (
-                    <button onClick={() => setInCall(true)} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Join Live Class ({platform.toUpperCase()})</button>
+                    <button onClick={() => setInCall(true)} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Join Live Class</button>
                   ) : (
                     <div className="space-y-2">
-                      <div className="h-40 bg-black rounded overflow-hidden">
-                        {platform === 'jitsi' ? (
-                          <iframe src={`https://meet.jit.si/${meetLink}`} className="w-full h-full border-0" allow="camera;microphone;fullscreen"></iframe>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center h-full p-2 text-center">
-                            <p className="text-yellow-400 mb-1">Google Meet Room:</p>
-                            <a href={`https://${meetLink}`} target="_blank" rel="noreferrer" className="bg-blue-600 px-3 py-1 rounded font-bold text-white">Open Meet Link</a>
-                          </div>
-                        )}
-                      </div>
+                      <iframe src="https://meet.jit.si/RPSMusicAcademyLive" className="w-full h-36 border-0 rounded" allow="camera;microphone;fullscreen"></iframe>
                       <button onClick={() => setInCall(false)} className="w-full bg-red-600 font-bold p-1 rounded">Leave Class</button>
                     </div>
                   )}
                 </div>
-
-                {/* Study Material sent by Admin */}
-                <div className="bg-gray-800 p-2.5 rounded space-y-1">
-                  <p className="font-bold text-yellow-300">Your Study Material (From Admin):</p>
-                  <p className="text-[11px] bg-gray-900 p-2 rounded text-gray-200 border border-gray-700">📚 Notes / PDF: Tabla Basic Beats & Alankars</p>
+                <div className="bg-gray-800 p-2 rounded space-y-1">
+                  <p className="font-bold text-yellow-300">Study Material (Admin sent):</p>
+                  <p className="text-[11px] bg-gray-900 p-2 rounded text-gray-200">📚 Notes: Tabla Beats & Alankars</p>
                 </div>
-
                 <div className="bg-gray-800 p-2.5 rounded space-y-2">
                   <p className="font-bold text-yellow-300">Private Message to Admin:</p>
-                  <textarea rows="2" value={msgText} onChange={e => setMsgText(e.target.value)} placeholder="Sir ko message bhejein..." className="w-full bg-gray-900 p-2 rounded border border-gray-700 text-white text-xs"></textarea>
-                  <button onClick={() => { if(msgText) { setStudentMsgs([...studentMsgs, msgText]); setMsgText(''); alert('Sent to Admin!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Send to Admin</button>
+                  <textarea rows="2" value={msgText} onChange={e => setMsgText(e.target.value)} placeholder="Message..." className="w-full bg-gray-900 p-2 rounded text-white"></textarea>
+                  <button onClick={() => { if(msgText) { setAdminMsgs([...adminMsgs, msgText]); setMsgText(''); alert('Sent!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Send to Admin</button>
                 </div>
               </div>
             )}
 
-            {/* TEACHER PORTAL */}
             {role === 'teacher' && (
-              <div className="bg-gray-900/90 rounded-lg p-3 border border-gray-700 space-y-3 shadow backdrop-blur">
+              <div className="bg-gray-900/90 rounded-lg p-3 border border-gray-700 space-y-3">
                 <h2 className="text-sm font-bold text-yellow-400">Teacher Room & Registration</h2>
-                {!isTeacherLoggedIn ? (
+                {!isTeacher ? (
                   <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                    <input type="text" value={tName} onChange={e => setTName(e.target.value)} placeholder="Full Name" className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                    <input type="text" value={tPhone} onChange={e => setTPhone(e.target.value)} placeholder="WhatsApp Number" className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                    
-                    <label className="text-[10px] text-gray-300 font-bold">Select Instrument / Department:</label>
-                    <select value={tSubject} onChange={e => setTSubject(e.target.value)} className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs">
+                    <input type="text" value={tName} onChange={e => setTName(e.target.value)} placeholder="Full Name" className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    <input type="text" value={tPhone} onChange={e => setTPhone(e.target.value)} placeholder="WhatsApp Number" className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    <select value={tSub} onChange={e => setTSub(e.target.value)} className="w-full bg-gray-900 p-2 rounded text-white text-xs">
                       <option value="Tabla">Tabla Teacher</option>
                       <option value="Sitar">Sitar Teacher</option>
                       <option value="Guitar">Guitar Teacher</option>
                       <option value="Piano / Harmonium">Piano / Harmonium Teacher</option>
                       <option value="Vocal">Vocal Teacher</option>
                     </select>
-
-                    <input type="password" value={tPass} onChange={e => setTPass(e.target.value)} placeholder="Teacher Code (5678)" className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                    
-                    <div className="bg-red-950/50 border border-red-500 p-2 rounded text-[10px] space-y-1">
-                      <p className="font-bold text-red-400">Terms & Conditions:</p>
-                      <p>• Referral: 97% Teacher / 3% Academy.</p>
-                      <p>• Normal: 60% Teacher / 40% Academy.</p>
-                      <label className="flex items-center gap-1.5 pt-1 font-bold text-yellow-300 cursor-pointer">
+                    <input type="password" value={tPass} onChange={e => setTPass(e.target.value)} placeholder="Teacher Code (5678)" className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                    <div className="bg-red-950/50 border border-red-500 p-2 rounded text-[10px]">
+                      <p className="font-bold text-red-400">T&C:</p>
+                      <p>• Referral: 97% | Normal: 60%</p>
+                      <label className="flex items-center gap-1 pt-1 font-bold text-yellow-300">
                         <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} /> Accept T&C
                       </label>
                     </div>
-
                     <button onClick={() => {
                       if(!tName || !tPhone) { alert('Naam aur phone bharein!'); return; }
                       if(!agreed) { alert('T&C accept karein!'); return; }
-                      if(tPass === '5678') { 
-                        setIsTeacherLoggedIn(true); 
-                        setTeachersList([...teachersList, {name: tName, subject: tSubject, phone: tPhone}]);
-                        alert('Teacher Room Created Successfully!'); 
-                      } else alert('Wrong Code! (5678)');
-                    }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Register & Enter Room</button>
+                      if(tPass === '5678') setIsTeacher(true); else alert('Wrong Code (5678)');
+                    }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Enter Room</button>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ {tSubject} Teacher Room ({tName})</div>
-                    
-                    {/* Teacher apne hi department ke bachho ki sankhya aur naam dekhega */}
-                    <div className="bg-gray-800 p-3 rounded space-y-2 border border-gray-700">
-                      <p className="font-bold text-yellow-300 text-xs">Aapke Department ({tSubject}) ke Students:</p>
-                      {students.filter(s => s.subject === tSubject).length === 0 ? (
-                        <p className="text-gray-400 text-[11px]">Abhi koi student nahi hai is department me.</p>
-                      ) : (
-                        students.filter(s => s.subject === tSubject).map((stu) => (
-                          <div key={stu.id} className="bg-gray-900 p-2 rounded flex justify-between items-center text-[11px]">
-                            <span>👤 {stu.name}</span>
-                            <span className="text-yellow-400">📞 {stu.phone}</span>
-                          </div>
-                        ))
-                      )}
-                      <p className="text-[10px] text-gray-400 pt-1 font-bold">Kul Students Sankhya: {students.filter(s => s.subject === tSubject).length}</p>
+                    <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ {tSub} Room ({tName})</div>
+                    <div className="bg-gray-800 p-3 rounded space-y-2">
+                      <p className="font-bold text-yellow-300 text-xs">Aapke Department ke Students:</p>
+                      {students.filter(s => s.sub === tSub).map(s => (
+                        <div key={s.id} className="bg-gray-900 p-1.5 rounded flex justify-between text-[11px]">
+                          <span>👤 {s.name}</span><span className="text-yellow-400">{s.phone}</span>
+                        </div>
+                      ))}
+                      <p className="text-[10px] text-gray-400">Total Students: {students.filter(s => s.sub === tSub).length}</p>
                     </div>
-
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300">Live Class Access for Students:</p>
-                      <button onClick={() => { setApproved(true); alert('Class started for your students!'); }} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Start Class for Students</button>
-                    </div>
+                    <button onClick={() => { setApproved(true); alert('Class started for students!'); }} className="w-full bg-green-600 text-white font-bold p-1.5 rounded">Start Class</button>
                   </div>
                 )}
               </div>
             )}
 
-            {/* ADMIN PORTAL */}
             {role === 'admin' && (
-              <div className="bg-gray-900/90 rounded-lg p-3 border border-red-500 space-y-3 shadow backdrop-blur">
-                <h2 className="text-sm font-bold text-red-400">Admin Master Dashboard</h2>
+              <div className="bg-gray-900/90 rounded-lg p-3 border border-red-500 space-y-3">
+                <h2 className="text-sm font-bold text-red-400">Admin Dashboard</h2>
                 {!isAdmin ? (
                   <div className="space-y-2">
-                    <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password (1234)" className="w-full bg-gray-800 p-2 rounded text-white border border-gray-700 text-xs" />
+                    <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password (1234)" className="w-full bg-gray-800 p-2 rounded text-white text-xs" />
                     <button onClick={() => { if(pass === '1234') setIsAdmin(true); else alert('Wrong!'); }} className="w-full bg-red-600 font-bold p-1.5 rounded">Login</button>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ Admin Verified (Gaurav Srivastava)</div>
-                    
-                    {/* Banner Image Change Option */}
+                    <div className="bg-green-900/40 p-2 rounded text-green-300 text-xs">✔ Admin Verified</div>
+                    <button onClick={() => { setApproved(true); alert('Class Connected!'); }} className="w-full bg-green-600 font-bold p-1.5 rounded">Approve & Connect Class</button>
                     <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Change Home Banner Image URL:</p>
-                      <input type="text" value={newImgUrl} onChange={e => setNewImgUrl(e.target.value)} placeholder="Nayi image ka URL..." className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                      <button onClick={() => { if(newImgUrl) { setBannerImg(newImgUrl); setNewImgUrl(''); alert('Banner image updated!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Update Image</button>
-                    </div>
-
-                    {/* Live Class Platform & Connection */}
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Live Class Platform & Link:</p>
-                      <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs">
-                        <option value="jitsi">Jitsi Meet</option>
-                        <option value="google">Google Meet</option>
+                      <p className="font-bold text-yellow-300 text-[11px]">Send Study Material to Student:</p>
+                      <select value={selStu} onChange={e => setSelStu(Number(e.target.value))} className="w-full bg-gray-900 p-2 rounded text-white text-xs">
+                        {students.map(s => <option key={s.id} value={s.id}>{s.name} ({s.sub})</option>)}
                       </select>
-                      <input type="text" value={meetLink} onChange={e => setMeetLink(e.target.value)} className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                      <button onClick={() => { setApproved(true); alert('Class Approved & Connected!'); }} className="w-full bg-green-600 font-bold p-1.5 rounded">Approve & Connect Class</button>
+                      <input type="text" value={matText} onChange={e => setMatText(e.target.value)} placeholder="Material note..." className="w-full bg-gray-900 p-2 rounded text-white text-xs" />
+                      <button onClick={() => { if(matText) { setMatText(''); alert('Material sent!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Send Material</button>
                     </div>
-
-                    {/* Send Study Material directly to Students */}
-                    <div className="bg-gray-800 p-2.5 rounded space-y-2">
-                      <p className="font-bold text-yellow-300 text-[11px]">Send Study Material to Student (Direct Admin Access):</p>
-                      <select value={selectedStudentId} onChange={e => setSelectedStudentId(Number(e.target.value))} className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs">
-                        {students.map(s => <option key={s.id} value={s.id}>{s.name} ({s.subject})</option>)}
-                      </select>
-                      <input type="text" value={materialText} onChange={e => setMaterialText(e.target.value)} placeholder="Study material note / PDF link..." className="w-full bg-gray-900 p-2 rounded text-white border border-gray-700 text-xs" />
-                      <button onClick={() => {
-                        if(materialText) {
-                          setStudents(students.map(s => s.id === selectedStudentId ? {...s, studyMaterial: materialText} : s));
-                          setMaterialText('');
-                          alert('Study material sent to student successfully!');
-                        }
-                      }} className="w-full bg-yellow-500 text-gray-900 font-bold p-1 rounded">Send Material</button>
-                    </div>
-
-                    {/* Student Private Messages */}
                     <div className="bg-gray-800 p-2 rounded space-y-1">
-                      <p className="font-bold text-yellow-300 text-[11px]">Student Private Messages:</p>
-                      {studentMsgs.length === 0 ? <p className="text-gray-400 text-[10px]">No messages.</p> : studentMsgs.map((m, i) => <div key={i} className="text-[10px] bg-gray-900 p-1 rounded">👤 {m}</div>)}
+                      <p className="font-bold text-yellow-300 text-[11px]">Student Messages:</p>
+                      {adminMsgs.length === 0 ? <p className="text-gray-400 text-[10px]">No messages.</p> : adminMsgs.map((m, i) => <div key={i} className="text-[10px] bg-gray-900 p-1 rounded">👤 {m}</div>)}
                     </div>
-
-                    {/* Publish Notice */}
-                    <input type="text" value={newNotice} onChange={e => setNewNotice(e.target.value)} placeholder="Publish notice..." className="w-full bg-gray-800 p-2 rounded text-white border border-gray-700 text-xs" />
-                    <button onClick={() => { if(newNotic
+                    <input type="text" value={newNotice} onChange={e => setNewNotice(e.target.value)} placeholder="Publish notice..." className="w-full bg-gray-800 p-2 rounded text-white text-xs" />
+                    <button onClick={() => { if(newNotice) { setNotices([newNotice, ...notices]); setNewNotice(''); alert('Published!'); }}} className="w-full bg-yellow-500 text-gray-900 font-bold p-1.5 rounded">Publish Notice</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
