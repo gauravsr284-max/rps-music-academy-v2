@@ -1,273 +1,269 @@
-```html
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="hi" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPS Music Talim Academy - Kashi</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        primary: '#e11d48', // Rose 600
-                        secondary: '#f59e0b', // Amber 500
-                        darkbg: '#0f172a',
-                        darkcard: '#1e293b'
-                    }
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
+        };
+
+        window.switchTab = function(tabName) {
+            var tabs = ['home', 'register', 'student', 'teacher', 'admin'];
+            for (var i = 0; i < tabs.length; i++) {
+                var section = document.getElementById('tab-' + tabs[i]);
+                var btn = document.getElementById('nav-' + tabs[i]);
+                if (section) section.classList.toggle('hidden', tabs[i] !== tabName);
+                if (btn) {
+                    btn.className = tabs[i] === tabName 
+                        ? "px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap" 
+                        : "px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap";
                 }
             }
-        }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.toggleTheme = function() {
+            var html = document.documentElement;
+            var icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                if (icon) icon.className = 'fa-solid fa-moon text-slate-700';
+                localStorage.setItem('rps_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                if (icon) icon.className = 'fa-solid fa-sun text-amber-400';
+                localStorage.setItem('rps_theme', 'dark');
+            }
+        };
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 22s linear infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Chat bubble styles */
-        .chat-bg { background-color: #efeae2; }
-        .dark .chat-bg { background-color: #0b141a; }
-        .msg-out { background-color: #d9fdd3; border-radius: 12px 0 12px 12px; }
-        .dark .msg-out { background-color: #005c4b; color: #e9edef; }
-        .msg-in { background-color: #ffffff; border-radius: 0 12px 12px 12px; }
-        .dark .msg-in { background-color: #202c33; color: #e9edef; }
-
-        /* Smooth section transitions */
-        .view-section { display: none; animation: fadeIn 0.4s ease-in-out; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Toast */
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { padding: 12px 20px; border-radius: 8px; color: white; font-weight: 600; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out forwards; pointer-events: auto; }
-        .toast.success { background-color: #10b981; }
-        .toast.error { background-color: #ef4444; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-darkbg dark:text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
 
-    <!-- Toast Notifications -->
-    <div id="toast-container"></div>
+    <div class="bg-amber-500 text-slate-950 text-xs sm:text-sm font-bold py-2 overflow-hidden shadow-sm">
+        <div class="animate-marquee">
+            🎵 RPS Music Talim Academy - Kashi (Banaras Gharana Music Center) • नए बैच शुरू हैं! • 100% Trusted Platform • Indian Student Registration Fee: ₹49 Only • रजिस्ट्रेशन के तुरंत बाद क्लास शुरू होने का समय बताया जाएगा!
+        </div>
+    </div>
 
-    <!-- Navigation -->
-    <header class="bg-white/80 dark:bg-darkbg/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xl shadow-lg">
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-600 to-amber-500 flex items-center justify-center text-white text-xl font-extrabold shadow-md">
                         <i class="fa-solid fa-music"></i>
                     </div>
-                    <div class="hidden sm:block">
-                        <h1 class="font-bold text-lg leading-tight">RPS Music Academy</h1>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Kashi Banaras Gharana</p>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                            RPS Music Talim Academy
+                        </h1>
+                        <p class="text-xs font-semibold text-rose-600 dark:text-rose-400">
+                            Founder: Swargiya Rajani Priya Ji | Kashi
+                        </p>
                     </div>
                 </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center gap-6 font-medium text-sm">
-                    <button onclick="navigate('home')" class="hover:text-primary transition">Home</button>
-                    <button onclick="navigate('courses')" class="hover:text-primary transition">Courses & Fees</button>
-                    
-                    <div id="auth-buttons" class="flex gap-3 ml-4 border-l pl-6 border-slate-200 dark:border-slate-700">
-                        <button onclick="navigate('login')" class="text-slate-600 dark:text-slate-300 hover:text-primary transition">Login</button>
-                        <button onclick="navigate('register')" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full hover:shadow-lg transition">Register</button>
-                    </div>
-                    
-                    <div id="user-menu" class="hidden flex items-center gap-4 ml-4 border-l pl-6 border-slate-200 dark:border-slate-700">
-                        <button onclick="navigate('dashboard')" class="bg-primary text-white px-5 py-2 rounded-full hover:shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-table-columns"></i> Dashboard
-                        </button>
-                        <button onclick="logout()" class="text-slate-500 hover:text-red-500 transition"><i class="fa-solid fa-sign-out-alt"></i></button>
-                    </div>
-
-                    <!-- Theme Toggle -->
-                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-darkcard flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-                        <i id="theme-icon" class="fa-solid fa-moon"></i>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700" title="Light/Night Mode">
+                        <i id="theme-icon" class="fa-solid fa-moon text-slate-700"></i>
                     </button>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center gap-3">
-                    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-darkcard flex items-center justify-center">
-                        <i id="theme-icon-mobile" class="fa-solid fa-moon"></i>
-                    </button>
-                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-2xl text-slate-600 dark:text-slate-300">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
+                    <a href="https://wa.me/918317041705" target="_blank" class="px-3 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp</span>
+                    </a>
                 </div>
             </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-darkcard border-b border-slate-200 dark:border-slate-800 p-4 space-y-3 shadow-lg absolute w-full">
-            <button onclick="navigate('home'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-medium py-2">Home</button>
-            <button onclick="navigate('courses'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-medium py-2">Courses & Fees</button>
-            <div id="auth-buttons-mobile" class="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <button onclick="navigate('login'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-medium py-2 text-primary">Login</button>
-                <button onclick="navigate('register'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg font-medium text-center">Register</button>
-            </div>
-            <div id="user-menu-mobile" class="hidden space-y-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <button onclick="navigate('dashboard'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full bg-primary text-white px-4 py-2 rounded-lg font-medium text-center">Dashboard</button>
-                <button onclick="logout(); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-medium py-2 text-red-500">Logout</button>
+
+            <div class="flex items-center gap-2 overflow-x-auto pt-3 pb-1 no-scrollbar">
+                <button id="nav-home" onclick="switchTab('home')" class="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap">Home</button>
+                <button id="nav-register" onclick="switchTab('register')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Register (₹49)</button>
+                <button id="nav-student" onclick="switchTab('student')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Student</button>
+                <button id="nav-teacher" onclick="switchTab('teacher')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Teacher</button>
+                <button id="nav-admin" onclick="switchTab('admin')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Admin</button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow flex flex-col w-full relative">
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
 
-        <!-- ================= HOME VIEW ================= -->
-        <section id="view-home" class="view-section active flex-grow">
-            <!-- Hero -->
-            <div class="relative overflow-hidden bg-slate-900 text-white py-24 sm:py-32">
-                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
-                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <span class="inline-block py-1 px-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-bold tracking-wider uppercase mb-6 text-amber-400">
-                        100% Trusted • Banaras Gharana
-                    </span>
-                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-                        Master Indian Classical Music<br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-primary">With Expert Gurus</span>
-                    </h1>
-                    <p class="mt-4 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto font-light mb-10">
-                        Join RPS Music Talim Academy. Learn Sitar, Tabla, Guitar, Piano, and Vocal training through our professional online LMS and live classes.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button onclick="navigate('register')" class="px-8 py-4 rounded-full bg-primary hover:bg-rose-700 text-white font-bold text-lg shadow-lg shadow-rose-600/30 transition">
-                            Start Learning Today
-                        </button>
-                        <button onclick="navigate('courses')" class="px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold text-lg transition border border-white/20">
-                            View Fee Structure
-                        </button>
+        <!-- HOME TAB -->
+        <section id="tab-home" class="space-y-6">
+            <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-shield-halved text-lg"></i></div>
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">100% TRUSTED & VERIFIED MUSIC ACADEMY PLATFORM</span>
+                        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-0.5">काशी बनारस घराना का विश्वसनीय संस्थान • रजिस्ट्रेशन के तुरंत बाद आपको बैच और क्लास शुरू होने का समय दिया जाता है।</p>
                     </div>
                 </div>
+                <button onclick="switchTab('register')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 shadow-sm">अभी रजिस्टर करें (₹49)</button>
             </div>
 
-            <!-- Features -->
-            <div class="py-16 bg-white dark:bg-darkbg">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                        <div class="p-6 rounded-3xl bg-slate-50 dark:bg-darkcard border border-slate-100 dark:border-slate-800">
-                            <div class="w-14 h-14 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-video"></i>
-                            </div>
-                            <h3 class="text-lg font-bold mb-2">Live Google Meet Classes</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Interactive live sessions with your assigned Guru directly from your dashboard.</p>
-                        </div>
-                        <div class="p-6 rounded-3xl bg-slate-50 dark:bg-darkcard border border-slate-100 dark:border-slate-800">
-                            <div class="w-14 h-14 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <h3 class="text-lg font-bold mb-2">1-on-1 Private Chat</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Secure, WhatsApp-style private messaging system directly with the Academy Admin.</p>
-                        </div>
-                        <div class="p-6 rounded-3xl bg-slate-50 dark:bg-darkcard border border-slate-100 dark:border-slate-800">
-                            <div class="w-14 h-14 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-book-open"></i>
-                            </div>
-                            <h3 class="text-lg font-bold mb-2">Digital Study Hub</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Access PDFs, notes, compositions (Kayda, Rela), and recordings uploaded by teachers.</p>
-                        </div>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm text-center space-y-5">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800">
+                    <span>ॐ Founder: Swargiya Rajani Priya Ji | Kashi</span>
+                </div>
+
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Learn With Professional Teachers</h2>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Sitar, Tabla (Major), Guitar, Piano/Harmonium & Vocal Training</p>
+
+                <div class="bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-left max-w-xl mx-auto space-y-4">
+                    <h3 class="text-base font-extrabold text-center text-rose-600 dark:text-rose-400">Fee Structure & Admission Details</h3>
+                    <div class="space-y-1.5 text-sm">
+                        <p class="font-bold text-slate-900 dark:text-white">🇮🇳 Domestic Students (भारतीय विद्यार्थी):</p>
+                        <ul class="space-y-1 text-slate-700 dark:text-slate-300 pl-4 list-disc">
+                            <li>Registration Fee: <strong class="text-emerald-600 dark:text-emerald-400">₹49 (One-Time)</strong></li>
+                            <li>Tabla Classes: <strong>₹1,200 / month</strong></li>
+                            <li>Other Instruments (Sitar, Guitar, Piano, Vocal): <strong>₹1,500 / month</strong></li>
+                        </ul>
                     </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto pt-2">
+                    <button onclick="switchTab('register')" class="flex-1 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-sm shadow-md hover:opacity-95 transition">
+                        <i class="fa-solid fa-user-check mr-1.5"></i> वेबसाइट पर रजिस्टर करें (₹49 UPI)
+                    </button>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxQ/viewform?usp=header" target="_blank" class="flex-1 py-3.5 px-5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-md transition text-center">
+                        <i class="fa-solid fa-file-lines mr-1.5"></i> Google Form Registration
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- ================= COURSES & FEES VIEW ================= -->
-        <section id="view-courses" class="view-section py-16 bg-slate-50 dark:bg-darkbg flex-grow">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold mb-4">Courses & Fee Structure</h2>
-                    <p class="text-slate-500 dark:text-slate-400">Transparent pricing for premium musical education.</p>
+        <!-- REGISTER TAB -->
+        <section id="tab-register" class="hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
+                <div>
+                    <span class="text-xs font-extrabold text-emerald-600 uppercase">✓ Database Connected Portal</span>
+                    <h2 class="text-xl font-extrabold mt-0.5">नया विद्यार्थी पंजीकरण (Live Registry)</h2>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div class="bg-slate-900 text-white rounded-2xl p-5 text-center space-y-3 max-w-md mx-auto border border-slate-700">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-bold">
+                        <span>पे PhonePe / Google Pay Accepted</span>
+                    </div>
+                    <p class="text-xs text-slate-300">भारतीय विद्यार्थी <strong>₹49</strong> रजिस्ट्रेशन फीस जमा करें:</p>
+                    <div class="bg-white p-3 rounded-2xl inline-block mx-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3D8317041705%40ybl%26pn%3DGAURAV%2520SHRIVASTAVA%26am%3D49%26cu%3DINR" alt="PhonePe QR" class="w-44 h-44 mx-auto">
+                    </div>
+                    <p class="text-sm font-extrabold tracking-wide text-amber-400">GAURAV SHRIVASTAVA</p>
+                    <p class="text-xs text-slate-300">UPI: <strong>8317041705</strong></p>
+                </div>
+
+                <div class="space-y-4 max-w-xl mx-auto pt-2">
+                    <div><label class="block text-xs font-bold mb-1">Full Name *</label><input id="reg-name" type="text" placeholder="अपना नाम लिखें..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm"></div>
+                    <div><label class="block text-xs font-bold mb-1">WhatsApp Number *</label><input id="reg-phone" type="tel" placeholder="WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm"></div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Select Course *</label>
+                        <select id="reg-course" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm">
+                            <option value="Tabla">Tabla (₹1,200/month)</option>
+                            <option value="Sitar">Sitar (₹1,500/month)</option>
+                            <option value="Guitar">Guitar (₹1,500/month)</option>
+                            <option value="Piano / Harmonium">Piano / Harmonium (₹1,500/month)</option>
+                            <option value="Vocal">Vocal (₹1,500/month)</option>
+                        </select>
+                    </div>
+                    <button id="btn-register" onclick="registerToDatabase()" class="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md transition">
+                        Submit & Create Database Record
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT TAB -->
+        <section id="tab-student" class="hidden space-y-6">
+            <div id="student-login-box" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
+                <h2 class="text-xl font-extrabold text-center">Student Live Login</h2>
+                <input id="stu-login-phone" type="tel" placeholder="Enter WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm">
+                <button id="btn-stu-login" onclick="loginStudentDB()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Fetch Data from Supabase</button>
+            </div>
+
+            <div id="student-dashboard" class="hidden space-y-6">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 rounded-3xl p-5 flex items-center justify-between">
+                    <div>
+                        <h3 id="stu-dash-name" class="text-lg font-extrabold">Student Name</h3>
+                        <p id="stu-dash-course" class="text-xs text-slate-500 font-bold">Course</p>
+                    </div>
+                    <button onclick="logoutStudent()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-rose-600">Logout</button>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border rounded-3xl overflow-hidden shadow-sm">
+                    <div class="bg-emerald-700 text-white px-5 py-3.5">
+                        <h4 class="text-sm font-extrabold">Live Database Private Chat (1-on-1)</h4>
+                        <p class="text-[11px] text-emerald-100">Connected to Supabase Postgres</p>
+                    </div>
+                    <div id="stu-chat-messages" class="h-72 overflow-y-auto p-4 space-y-3 bg-slate-100 dark:bg-slate-950"></div>
+                    <div class="p-3 bg-white dark:bg-slate-900 border-t flex gap-2">
+                        <input id="stu-chat-input" type="text" placeholder="Type a message..." class="flex-1 px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sm border-0">
+                        <button onclick="sendStudentMessageDB()" class="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-bold">Send</button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
+                    <h4 class="text-base font-extrabold text-amber-500"><i class="fa-solid fa-folder-open mr-2"></i>Study Material Library (Cloud)</h4>
+                    <div id="stu-materials-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEACHER TAB -->
+        <section id="tab-teacher" class="hidden space-y-6">
+            <div id="teacher-login-box" class="bg-white dark:bg-slate-900 border rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
+                <h2 class="text-xl font-extrabold text-amber-600">Teacher Room</h2>
+                <select id="tea-login-role" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm font-semibold">
+                    <option value="Tabla Teacher">Tabla Teacher</option>
+                    <option value="Sitar Teacher">Sitar Teacher</option>
+                    <option value="Vocal Teacher">Vocal Teacher</option>
+                </select>
+                <input id="tea-login-code" type="password" placeholder="Code (5678)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
+                <button onclick="loginTeacher()" class="w-full py-3.5 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-sm">Enter Room</button>
+            </div>
+
+            <div id="teacher-dashboard" class="hidden space-y-6">
+                <div class="bg-white border rounded-3xl p-5 flex justify-between">
+                    <h3 id="tea-dash-title" class="text-xl font-extrabold text-slate-900">Teacher Dashboard</h3>
+                    <button onclick="logoutTeacher()" class="text-xs font-bold text-rose-600">Logout</button>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
+                    <h4 class="text-base font-extrabold">📤 Upload Material to DB</h4>
+                    <input id="tea-mat-title" type="text" placeholder="Title (e.g. Teen Taal Kayda)" class="w-full px-4 py-2.5 rounded-xl border text-sm">
+                    <textarea id="tea-mat-desc" rows="2" placeholder="Link or Text notes..." class="w-full px-4 py-2.5 rounded-xl border text-sm"></textarea>
+                    <button onclick="uploadMaterialDB()" class="w-full py-3 rounded-xl bg-rose-600 text-white font-bold text-xs">Save to Supabase</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN TAB -->
+        <section id="tab-admin" class="hidden space-y-6">
+            <div id="admin-login-box" class="bg-white border rounded-3xl p-6 max-w-md mx-auto space-y-4">
+                <h2 class="text-xl font-extrabold text-center text-slate-900">Admin Control Room</h2>
+                <input id="adm-pass" type="password" placeholder="Admin Pass (1234)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
+                <button onclick="loginAdmin()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Master Login</button>
+            </div>
+
+            <div id="admin-dashboard" class="hidden space-y-6">
+                <div class="bg-slate-900 text-white rounded-3xl p-5 flex justify-between">
+                    <h3 class="text-xl font-extrabold text-amber-400">Gaurav Srivastava (Admin)</h3>
+                    <button onclick="logoutAdmin()" class="px-4 py-2 bg-white/10 rounded-xl text-xs font-bold">Logout</button>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-extrabold text-rose-600">Live Student Chat Inbox</h4>
+                        <button onclick="fetchAdminData()" class="text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg shadow-sm"><i class="fa-solid fa-rotate mr-1"></i>Refresh DB</button>
+                    </div>
                     
-                    <!-- Pricing Cards -->
-                    <div class="space-y-6">
-                        <!-- Domestic -->
-                        <div class="bg-white dark:bg-darkcard p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wide">Domestic (India)</div>
-                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-flag-india text-orange-500"></i> Indian Students</h3>
-                            <ul class="space-y-4 text-sm font-medium">
-                                <li class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
-                                    <span class="text-slate-500 dark:text-slate-400">Registration Fee (One-Time)</span>
-                                    <span class="text-lg font-bold text-primary">₹99</span>
-                                </li>
-                                <li class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
-                                    <span class="text-slate-500 dark:text-slate-400">Tabla Classes</span>
-                                    <span class="text-lg font-bold text-slate-800 dark:text-white">₹1,200 <span class="text-xs font-normal text-slate-400">/mo</span></span>
-                                </li>
-                                <li class="flex justify-between items-center pb-3">
-                                    <span class="text-slate-500 dark:text-slate-400">Other Instruments (Sitar, Guitar, Piano, Vocal)</span>
-                                    <span class="text-lg font-bold text-slate-800 dark:text-white">₹1,500 <span class="text-xs font-normal text-slate-400">/mo</span></span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Foreign -->
-                        <div class="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
-                            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-globe text-blue-400"></i> International Students</h3>
-                            <ul class="space-y-4 text-sm font-medium">
-                                <li class="flex justify-between items-center pb-3 border-b border-slate-700">
-                                    <span class="text-slate-300">Registration Fee (One-Time)</span>
-                                    <span class="text-lg font-bold text-amber-400">$5</span>
-                                </li>
-                                <li class="flex justify-between items-center pb-3">
-                                    <span class="text-slate-300">All Instruments</span>
-                                    <span class="text-lg font-bold text-white">$60 - $120 <span class="text-xs font-normal text-slate-400">/mo</span></span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Payment QR & Admission -->
-                    <div class="bg-white dark:bg-darkcard p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 text-center">
-                        <h3 class="text-xl font-bold mb-2">Scan & Pay Registration Fee</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Pay using PhonePe, Google Pay, or Paytm</p>
-                        
-                        <div class="bg-black p-6 rounded-2xl inline-block mb-4 shadow-lg border border-slate-800 relative">
-                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">PhonePe Accepted</div>
-                            <!-- Generating generic QR for UPI ID via API -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi%3A%2F%2Fpay%3Fpa%3D8317041705%40ybl%26pn%3DGAURAV%2520SHRIVASTAVA%26cu%3DINR&bgcolor=ffffff" alt="UPI QR" class="w-40 h-40 rounded-lg bg-white p-2">
-                        </div>
-                        
-                        <div class="mb-6">
-                            <p class="font-bold text-lg">GAURAV SHRIVASTAVA</p>
-                            <p class="text-xs font-mono bg-slate-100 dark:bg-slate-800 py-1.5 px-3 rounded-lg inline-block mt-2">UPI: 8317041705@ybl</p>
-                        </div>
-
-                        <div class="space-y-3">
-                            <button onclick="navigate('register')" class="w-full py-3.5 rounded-xl bg-primary hover:bg-rose-700 text-white font-bold transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-user-plus"></i> Register on Website
-                            </button>
-                            <div class="text-xs text-slate-400 font-bold uppercase my-2">- OR -</div>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxQ/viewform?usp=header" target="_blank" class="w-full py-3.5 rounded-xl bg-[#4285F4] hover:bg-[#3367d6] text-white font-bold transition flex items-center justify-center gap-2 block">
-                                <i class="fa-brands fa-google"></i> Register via Google Form
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= LOGIN / REGISTER VIEW ================= -->
-        <section id="view-login" class="view-section py-12 flex-grow flex items-center justify-center bg-slate-50 dark:bg-darkbg">
-            <div class="w-full max-w-md bg-white dark:bg-darkcard p-8 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800">
-                <div class="text-center mb-8">
-                    <div class="w-12 h-12 mx-auto rounded-xl bg-primary text-white flex items-center justify-center text-xl mb-4 shadow-lg shadow-rose-500/30">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold">Welcome Back</h2>
-                    <p class="text-sm text-slate-500 mt-1">Login to access your LMS Dashboard</p>
-             
+          
