@@ -7,8 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -147,8 +145,8 @@
         <section id="tab-register" class="hidden space-y-6">
             <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
                 <div>
-                    <span class="text-xs font-extrabold text-emerald-600 uppercase">✓ Database Connected Portal</span>
-                    <h2 class="text-xl font-extrabold mt-0.5">नया विद्यार्थी पंजीकरण (Live Registry)</h2>
+                    <span class="text-xs font-extrabold text-emerald-600 uppercase">✓ Instant Admission Portal</span>
+                    <h2 class="text-xl font-extrabold mt-0.5">नया विद्यार्थी पंजीकरण (Registration)</h2>
                 </div>
 
                 <div class="bg-slate-900 text-white rounded-2xl p-5 text-center space-y-3 max-w-md mx-auto border border-slate-700">
@@ -176,8 +174,8 @@
                             <option value="Vocal">Vocal (₹1,500/month)</option>
                         </select>
                     </div>
-                    <button id="btn-register" onclick="registerToDatabase()" class="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md transition">
-                        Submit & Create Database Record
+                    <button onclick="registerStudent()" class="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md transition">
+                        Submit & Complete Registration
                     </button>
                 </div>
             </div>
@@ -186,9 +184,9 @@
         <!-- STUDENT TAB -->
         <section id="tab-student" class="hidden space-y-6">
             <div id="student-login-box" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
-                <h2 class="text-xl font-extrabold text-center">Student Live Login</h2>
+                <h2 class="text-xl font-extrabold text-center">Student Portal Login</h2>
                 <input id="stu-login-phone" type="tel" placeholder="Enter WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm">
-                <button id="btn-stu-login" onclick="loginStudentDB()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Fetch Data from Supabase</button>
+                <button onclick="loginStudent()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Student Login</button>
             </div>
 
             <div id="student-dashboard" class="hidden space-y-6">
@@ -202,19 +200,20 @@
 
                 <div class="bg-white dark:bg-slate-900 border rounded-3xl overflow-hidden shadow-sm">
                     <div class="bg-emerald-700 text-white px-5 py-3.5">
-                        <h4 class="text-sm font-extrabold">Live Database Private Chat (1-on-1)</h4>
-                        <p class="text-[11px] text-emerald-100">Connected to Supabase Postgres</p>
+                        <h4 class="text-sm font-extrabold">Academy Support & Chat (1-on-1)</h4>
                     </div>
                     <div id="stu-chat-messages" class="h-72 overflow-y-auto p-4 space-y-3 bg-slate-100 dark:bg-slate-950"></div>
                     <div class="p-3 bg-white dark:bg-slate-900 border-t flex gap-2">
                         <input id="stu-chat-input" type="text" placeholder="Type a message..." class="flex-1 px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sm border-0">
-                        <button onclick="sendStudentMessageDB()" class="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-bold">Send</button>
+                        <button onclick="sendStudentMessage()" class="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-bold">Send</button>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
-                    <h4 class="text-base font-extrabold text-amber-500"><i class="fa-solid fa-folder-open mr-2"></i>Study Material Library (Cloud)</h4>
-                    <div id="stu-materials-list" class="space-y-2"></div>
+                    <h4 class="text-base font-extrabold text-amber-500"><i class="fa-solid fa-folder-open mr-2"></i>Study Material Library</h4>
+                    <div id="stu-materials-list" class="space-y-2">
+                        <div class="p-3 rounded-xl bg-slate-50 border"><h5 class="text-sm font-bold">Teen Taal Theka & Basic Kayda</h5><p class="text-xs text-slate-600">Banaras Gharana Initial Practice Notes</p><span class="text-[10px] text-rose-600 font-bold">Tabla</span></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -222,26 +221,26 @@
         <!-- TEACHER TAB -->
         <section id="tab-teacher" class="hidden space-y-6">
             <div id="teacher-login-box" class="bg-white dark:bg-slate-900 border rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
-                <h2 class="text-xl font-extrabold text-amber-600">Teacher Room</h2>
+                <h2 class="text-xl font-extrabold text-amber-600">Teacher Portal Room</h2>
                 <select id="tea-login-role" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm font-semibold">
                     <option value="Tabla Teacher">Tabla Teacher</option>
                     <option value="Sitar Teacher">Sitar Teacher</option>
                     <option value="Vocal Teacher">Vocal Teacher</option>
                 </select>
-                <input id="tea-login-code" type="password" placeholder="Code (5678)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
+                <input id="tea-login-code" type="password" placeholder="Teacher Code (5678)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
                 <button onclick="loginTeacher()" class="w-full py-3.5 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-sm">Enter Room</button>
             </div>
 
             <div id="teacher-dashboard" class="hidden space-y-6">
-                <div class="bg-white border rounded-3xl p-5 flex justify-between">
-                    <h3 id="tea-dash-title" class="text-xl font-extrabold text-slate-900">Teacher Dashboard</h3>
+                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 flex justify-between">
+                    <h3 id="tea-dash-title" class="text-xl font-extrabold text-slate-900 dark:text-white">Teacher Dashboard</h3>
                     <button onclick="logoutTeacher()" class="text-xs font-bold text-rose-600">Logout</button>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
-                    <h4 class="text-base font-extrabold">📤 Upload Material to DB</h4>
+                    <h4 class="text-base font-extrabold">📤 Upload Study Material</h4>
                     <input id="tea-mat-title" type="text" placeholder="Title (e.g. Teen Taal Kayda)" class="w-full px-4 py-2.5 rounded-xl border text-sm">
-                    <textarea id="tea-mat-desc" rows="2" placeholder="Link or Text notes..." class="w-full px-4 py-2.5 rounded-xl border text-sm"></textarea>
-                    <button onclick="uploadMaterialDB()" class="w-full py-3 rounded-xl bg-rose-600 text-white font-bold text-xs">Save to Supabase</button>
+                    <textarea id="tea-mat-desc" rows="2" placeholder="Description or Notes..." class="w-full px-4 py-2.5 rounded-xl border text-sm"></textarea>
+                    <button onclick="uploadMaterial()" class="w-full py-3 rounded-xl bg-rose-600 text-white font-bold text-xs">Publish Material</button>
                 </div>
             </div>
         </section>
@@ -250,7 +249,7 @@
         <section id="tab-admin" class="hidden space-y-6">
             <div id="admin-login-box" class="bg-white border rounded-3xl p-6 max-w-md mx-auto space-y-4">
                 <h2 class="text-xl font-extrabold text-center text-slate-900">Admin Control Room</h2>
-                <input id="adm-pass" type="password" placeholder="Admin Pass (1234)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
+                <input id="adm-pass" type="password" placeholder="Admin Password (1234)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
                 <button onclick="loginAdmin()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Master Login</button>
             </div>
 
@@ -261,9 +260,16 @@
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-lg font-extrabold text-rose-600">Live Student Chat Inbox</h4>
-                        <button onclick="fetchAdminData()" class="text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg shadow-sm"><i class="fa-solid fa-rotate mr-1"></i>Refresh DB</button>
-                    </div>
-                    
-          
+                    <h4 class="text-lg font-extrabold text-rose-600">Registered Students List</h4>
+                    <div id="admin-students-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Local Working Logic for Instant Access
+        let currentStudent = null;
+
+       
