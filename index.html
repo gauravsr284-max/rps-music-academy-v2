@@ -1,25 +1,59 @@
-```html
 <!DOCTYPE html>
 <html lang="hi" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPS Music Talim Academy - Kashi | Founder: Swargiya Rajani Priya Ji</title>
-    <!-- Tailwind CSS CDN -->
+    <title>RPS Music Talim Academy - Kashi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'Poppins', 'sans-serif'] }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
-        }
+        };
+
+        // Top-level Navigation & Theme functions so buttons NEVER fail
+        window.switchTab = function(tabName) {
+            var tabs = ['home', 'register', 'student', 'teacher', 'admin'];
+            for (var i = 0; i < tabs.length; i++) {
+                var section = document.getElementById('tab-' + tabs[i]);
+                var btn = document.getElementById('nav-' + tabs[i]);
+                if (section) {
+                    if (tabs[i] === tabName) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                }
+                if (btn) {
+                    if (tabs[i] === tabName) {
+                        btn.className = "px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap";
+                    }
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.toggleTheme = function() {
+            var html = document.documentElement;
+            var icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                if (icon) icon.className = 'fa-solid fa-moon text-slate-700';
+                localStorage.setItem('rps_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                if (icon) icon.className = 'fa-solid fa-sun text-amber-400';
+                localStorage.setItem('rps_theme', 'dark');
+            }
+        };
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -30,224 +64,243 @@
         .animate-marquee {
             display: inline-block;
             white-space: nowrap;
-            animation: marquee 24s linear infinite;
+            animation: marquee 22s linear infinite;
         }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
     </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col antialiased transition-colors duration-200 selection:bg-rose-600 selection:text-white">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
-    <!-- Top Announcement Ticker (No Public Phone Number, Only Official Gmail & UPI Info) -->
-    <div class="bg-gradient-to-r from-rose-700 via-amber-600 to-rose-700 text-white font-semibold text-xs sm:text-sm py-2 overflow-hidden shadow-sm">
+    <!-- Top Running Notice Bar -->
+    <div class="bg-amber-500 text-slate-950 text-xs sm:text-sm font-bold py-2 overflow-hidden shadow-sm">
         <div class="animate-marquee">
-            🎵 RPS Music Talim Academy - Kashi (Banaras Gharana) • Founder: Swargiya Rajani Priya Ji • Sitar, Tabla, Guitar, Piano/Harmonium & Vocal Training • 100% Trusted & Verified Platform • Indian Student Registration Fee: ₹49 Only (UPI: Gauravsr284@oksbi) • Official Contact Gmail: gauravsr284@gmail.com 🎵
+            🎵 RPS Music Talim Academy - Kashi (Banaras Gharana Music Center) • नए बैच शुरू हैं! • 100% Trusted Platform • Indian Student Registration Fee: ₹49 Only • रजिस्ट्रेशन के तुरंत बाद क्लास शुरू होने का समय बताया जाएगा!
         </div>
     </div>
 
-    <!-- Navigation Header (Clean White / Night Mode Toggle + Strictly No Public Phone Number) -->
-    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3 cursor-pointer" onclick="router('home')">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-white font-black shadow-md shadow-rose-500/20">
-                        <i class="fa-solid fa-music text-lg"></i>
+    <!-- Main Header & Navigation -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-600 to-amber-500 flex items-center justify-center text-white text-xl font-extrabold shadow-md">
+                        <i class="fa-solid fa-music"></i>
                     </div>
                     <div>
-                        <h1 class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">RPS Music Talim Academy</h1>
-                        <p class="text-[11px] text-rose-600 dark:text-amber-400 font-semibold">Founder: Swargiya Rajani Priya Ji | Kashi</p>
+                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                            RPS Music Talim Academy
+                        </h1>
+                        <p class="text-xs font-semibold text-rose-600 dark:text-rose-400">
+                            Founder: Swargiya Rajani Priya Ji | Kashi
+                        </p>
                     </div>
                 </div>
-                <!-- Mobile Theme Toggle & Gmail Button -->
-                <div class="flex items-center gap-2 sm:hidden">
-                    <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 text-xs font-bold" title="White / Night Mode">
-                        <i id="theme-icon-mobile" class="fa-solid fa-moon"></i>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700" title="Light/Night Mode">
+                        <i id="theme-icon" class="fa-solid fa-moon text-slate-700"></i>
                     </button>
-                    <a href="mailto:gauravsr284@gmail.com" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold">
-                        <i class="fa-solid fa-envelope"></i> Gmail
+                    <a href="https://wa.me/918317041705" target="_blank" class="px-3 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>WhatsApp</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Navigation Pills + White/Night Mode Button + Official Gmail -->
-            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                <button onclick="router('home')" id="nav-home" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-sm transition shrink-0">Home</button>
-                <button onclick="router('register')" id="nav-register" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shrink-0">Register (₹49)</button>
-                <button onclick="openRolePortal('student')" id="nav-student" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shrink-0">Student</button>
-                <button onclick="openRolePortal('teacher')" id="nav-teacher" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shrink-0">Teacher</button>
-                <button onclick="openRolePortal('admin')" id="nav-admin" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shrink-0">Admin</button>
-                
-                <!-- Desktop Clean White / Night Mode Switch -->
-                <button onclick="toggleTheme()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 text-xs font-bold transition shrink-0 ml-1" title="Switch White / Night Mode">
-                    <i id="theme-icon-desktop" class="fa-solid fa-moon"></i>
-                    <span id="theme-text-desktop">Night Mode</span>
+            <!-- Navigation Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pt-3 pb-1 no-scrollbar">
+                <button id="nav-home" onclick="switchTab('home')" class="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap">
+                    Home
                 </button>
-
-                <!-- Official Gmail Contact Button -->
-                <a href="mailto:gauravsr284@gmail.com" class="hidden lg:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/60 dark:hover:bg-rose-900/70 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-bold transition shrink-0">
-                    <i class="fa-solid fa-envelope"></i> gauravsr284@gmail.com
-                </a>
+                <button id="nav-register" onclick="switchTab('register')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">
+                    Register (₹49)
+                </button>
+                <button id="nav-student" onclick="switchTab('student')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">
+                    Student
+                </button>
+                <button id="nav-teacher" onclick="switchTab('teacher')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">
+                    Teacher
+                </button>
+                <button id="nav-admin" onclick="switchTab('admin')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">
+                    Admin
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow flex flex-col">
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
 
-        <!-- ==================== 1. HOME VIEW ==================== -->
-        <div id="view-home" class="view-section flex-grow p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full space-y-8">
-
-            <!-- 100% Trusted Platform Assurance Banner -->
-            <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/70 flex flex-wrap items-center justify-between gap-3 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow">
+        <!-- ==================== 1. HOME TAB ==================== -->
+        <section id="tab-home" class="space-y-6">
+            <!-- Trusted Banner -->
+            <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5">
                         <i class="fa-solid fa-shield-halved text-lg"></i>
                     </div>
                     <div>
-                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">100% Trusted & Verified Music Academy Platform</span>
-                        <p class="text-xs text-slate-600 dark:text-slate-300">काशी बनारस घराना का विश्वसनीय संस्थान • रजिस्ट्रेशन के तुरंत बाद आपको बैच और क्लास शुरू होने का समय दिया जाता है।</p>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                            100% TRUSTED & VERIFIED MUSIC ACADEMY PLATFORM
+                        </span>
+                        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-0.5">
+                            काशी बनारस घराना का विश्वसनीय संस्थान • रजिस्ट्रेशन के तुरंत बाद आपको बैच और क्लास शुरू होने का समय दिया जाता है।
+                        </p>
                     </div>
                 </div>
-                <button onclick="router('register')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition shrink-0">
+                <button onclick="switchTab('register')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 shadow-sm">
                     अभी रजिस्टर करें (₹49)
                 </button>
             </div>
 
-            <!-- Hero & Fee Structure Card (Clean White / Dark Adaptive) -->
-            <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xl space-y-6">
-                <div class="text-center space-y-2">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-50 dark:bg-amber-500/10 border border-rose-200 dark:border-amber-500/30 text-rose-700 dark:text-amber-400 text-xs font-bold">
-                        <i class="fa-solid fa-om"></i> Founder: Swargiya Rajani Priya Ji | Kashi
-                    </div>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                        Kashi Ghat - Banaras Gharana Music Center
-                    </h2>
-                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium">
-                        Sitar, Tabla, Guitar, Piano/Harmonium & Vocal Training (Online & In-Person)
-                    </p>
+            <!-- Hero & Fee Structure Card -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm text-center space-y-5">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800">
+                    <span>ॐ Founder: Swargiya Rajani Priya Ji | Kashi</span>
                 </div>
 
-                <!-- Fee Structure & Admission Box -->
-                <div class="rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 p-5 sm:p-6 space-y-5 max-w-3xl mx-auto">
-                    <h3 class="text-center text-lg sm:text-xl font-extrabold text-rose-600 dark:text-amber-400 border-b border-slate-200 dark:border-slate-700 pb-3">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                    Kashi Ghat - Banaras Gharana Music Center
+                </h2>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                    Sitar, Tabla, Guitar, Piano/Harmonium & Vocal Training (Online & In-Person)
+                </p>
+
+                <!-- Fee Structure Box -->
+                <div class="bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-left max-w-xl mx-auto space-y-4">
+                    <h3 class="text-base font-extrabold text-center text-rose-600 dark:text-rose-400">
                         Fee Structure & Admission Details
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Domestic Students -->
-                        <div class="space-y-2.5 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                            <h4 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                <span>🇮🇳</span> Domestic Students (Indian):
-                            </h4>
-                            <ul class="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 pl-1">
-                                <li class="flex items-center justify-between">
-                                    <span>• Registration Fee:</span>
-                                    <span class="font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-0.5 rounded-lg border border-emerald-200 dark:border-emerald-500/30" id="disp-dom-reg">₹49 (One-Time)</span>
-                                </li>
-                                <li class="flex items-center justify-between">
-                                    <span>• Tabla Classes:</span>
-                                    <span class="font-bold text-rose-600 dark:text-amber-400" id="disp-dom-tabla">₹1,200 / month</span>
-                                </li>
-                                <li class="flex items-center justify-between">
-                                    <span>• Other Instruments:</span>
-                                    <span class="font-bold text-rose-600 dark:text-amber-400" id="disp-dom-other">₹1,500 / month</span>
-                                </li>
-                            </ul>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400 pt-1">*(Sitar, Guitar, Piano/Harmonium & Vocal)</p>
-                        </div>
+                    <div class="space-y-1.5 text-sm">
+                        <p class="font-bold text-slate-900 dark:text-white">🇮🇳 Domestic Students (भारतीय विद्यार्थी):</p>
+                        <ul class="space-y-1 text-slate-700 dark:text-slate-300 pl-4 list-disc">
+                            <li>Registration Fee: <strong class="text-emerald-600 dark:text-emerald-400">₹49 (One-Time)</strong></li>
+                            <li>Tabla Classes: <strong>₹1,200 / month</strong></li>
+                            <li>Other Instruments (Sitar, Guitar, Piano/Harmonium, Vocal): <strong>₹1,500 / month</strong></li>
+                        </ul>
+                    </div>
 
-                        <!-- Foreign Students -->
-                        <div class="space-y-2.5 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                            <h4 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                                <span>🌍</span> Foreign Students (International):
-                            </h4>
-                            <ul class="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 pl-1">
-                                <li class="flex items-center justify-between">
-                                    <span>• Registration Fee:</span>
-                                    <span class="font-extrabold text-rose-600 dark:text-amber-400" id="disp-for-reg">$5 (One-Time)</span>
-                                </li>
-                                <li class="flex items-center justify-between">
-                                    <span>• Tabla & Other Instruments:</span>
-                                    <span class="font-bold text-rose-600 dark:text-amber-400" id="disp-for-monthly">$60 - $120 / month</span>
-                                </li>
-                            </ul>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400 pt-1">*(1-on-1 Live Video Sessions via Google Meet)</p>
-                        </div>
+                    <div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-1.5 text-sm">
+                        <p class="font-bold text-slate-900 dark:text-white">🌍 Foreign Students (NRI / International):</p>
+                        <ul class="space-y-1 text-slate-700 dark:text-slate-300 pl-4 list-disc">
+                            <li>Registration Fee: <strong>$5 (One-Time)</strong></li>
+                            <li>Tabla & Other Instruments: <strong>$60 - $120 / month</strong></li>
+                        </ul>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="max-w-3xl mx-auto space-y-3">
-                    <button onclick="router('register')" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-700 hover:to-amber-700 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-rose-600/20 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-user-check"></i> वेबसाइट पर रजिस्टर करें (UPI: Gauravsr284@oksbi पर ₹49 जमा करें)
+                <div class="flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto pt-2">
+                    <button onclick="switchTab('register')" class="flex-1 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-sm shadow-md hover:opacity-95 transition">
+                        <i class="fa-solid fa-user-check mr-1.5"></i> वेबसाइट पर रजिस्टर करें (₹49 UPI)
                     </button>
+                    <a id="home-gform-btn" href="https://docs.google.com/forms" target="_blank" class="flex-1 py-3.5 px-5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-md transition text-center">
+                        <i class="fa-solid fa-file-lines mr-1.5"></i> Register via Google Form
+                    </a>
+                </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <button onclick="openGoogleFormDirect()" class="w-full py-3.5 px-5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow transition flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-wpforms text-base"></i> Register via Google Form
-                        </button>
-                        <button onclick="shareWebsiteWithFriend()" class="w-full py-3.5 px-5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-link"></i> Invite Your Friend (Share Website)
-                        </button>
-                    </div>
+                <div class="max-w-xl mx-auto">
+                    <button onclick="shareWebsite()" class="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm transition">
+                        <i class="fa-solid fa-link mr-1.5"></i> Invite Your Friend (Share Website)
+                    </button>
                 </div>
             </div>
 
-            <!-- 5 Strict Subjects / Instruments Showcase (NO KATHAK, NO PERSONAL TEACHER NAMES) -->
-            <div class="space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">हमारे 5 प्रमुख संगीत विभाग (5 Core Music Departments)</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">प्रत्येक विषय के लिए समर्पित विषय शिक्षक (Subject Teachers) उपलब्ध हैं।</p>
-                    </div>
-                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold"><i class="fa-solid fa-check-double"></i> 100% Verified Faculty</span>
-                </div>
-                <div id="home-teachers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <!-- Populated dynamically with the 5 Subject Teachers -->
-                </div>
-            </div>
-
-            <!-- Public Inquiry Form & Official Gmail Contact Card -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                <!-- Inquiry Form -->
-                <div class="lg:col-span-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-lg space-y-4">
-                    <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
-                        <i class="fa-solid fa-comment-dots text-rose-600"></i> Aapka Sawaal ya Requirement bhejein
+            <!-- 5 Core Music Departments (Static + Always Visible) -->
+            <div class="space-y-3">
+                <div>
+                    <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">
+                        हमारे 5 प्रमुख संगीत विभाग (5 Core Music Departments)
                     </h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400">
-                        आपका संदेश सीधे एडमिन के इनबॉक्स में जाएगा। आपकी निजी जानकारी पूरी तरह गोपनीय रहती है।
+                        प्रत्येक विषय के लिए समर्पित विषय शिक्षक (Subject Teachers) उपलब्ध हैं • ✓ 100% Verified Faculty
                     </p>
-                    <div class="space-y-3.5">
-                        <input type="text" id="inq-name" placeholder="Aapka Naam..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white outline-none focus:border-rose-500">
-                        <input type="text" id="inq-phone" placeholder="Aapka Contact Number ya Email..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white outline-none focus:border-rose-500">
-                        <textarea id="inq-text" rows="3" placeholder="Apna sawal ya requirement yahan likhein..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white outline-none focus:border-rose-500"></textarea>
-                        <button onclick="submitHomeInquiry()" class="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> एडमिन को संदेश भेजें (Submit Inquiry)
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Official Gmail Contact Box (No Public Phone Number) -->
-                <div class="lg:col-span-5 rounded-3xl bg-gradient-to-br from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 border border-rose-200 dark:border-slate-800 p-6 sm:p-8 shadow-lg flex flex-col justify-between space-y-5">
-                    <div class="space-y-3">
-                        <span class="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 text-xs font-extrabold uppercase">
-                            Official Support & Contact
-                        </span>
-                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">
-                            संपर्क करने के लिए हमें Gmail करें
-                        </h3>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            किसी भी जानकारी, प्रवेश सहायता या प्रश्न के लिए आप सीधे हमारे आधिकारिक ईमेल पर संदेश भेज सकते हैं। विद्यार्थियों का नंबर केवल रजिस्ट्रेशन फॉर्म या Google Form के भीतर ही सुरक्षित रूप से लिया जाता है।
-                        </p>
-                        <div class="p-4 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
-                            <p class="text-[11px] font-bold text-slate-400 uppercase">Official Academy Gmail</p>
-                            <p class="text-sm sm:text-base font-extrabold text-rose-600 dark:text-amber-400 break-all" id="public-gmail-display">gauravsr284@gmail.com</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-rose-600 uppercase">Banaras Gharana</span>
+                            <h4 class="text-base font-extrabold mt-0.5">1. Tabla (तबला वादन)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Assigned: <strong>Tabla Teacher</strong></p>
                         </div>
+                        <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">Join</button>
                     </div>
 
-                    <div class="space-y-2.5">
-                        <a href="mailto:gauravsr284@gmail.com?subject=RPS%20Music%20Talim%20Academy%20Inquiry" class="w-full py-3 rounded-xl bg-rose-600 hov
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-amber-600 uppercase">Classical String</span>
+                            <h4 class="text-base font-extrabold mt-0.5">2. Sitar (सितार वादन)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Assigned: <strong>Sitar Teacher</strong></p>
+                        </div>
+                        <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">Join</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-blue-600 uppercase">Acoustic & Chords</span>
+                            <h4 class="text-base font-extrabold mt-0.5">3. Guitar (गिटार)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Assigned: <strong>Guitar Teacher</strong></p>
+                        </div>
+                        <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">Join</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase">Keys & Sangati</span>
+                            <h4 class="text-base font-extrabold mt-0.5">4. Piano / Harmonium</h4>
+                            <p class="text-xs text-slate-500 mt-1">Assigned: <strong>Piano / Harmonium Teacher</strong></p>
+                        </div>
+                        <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">Join</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-purple-600 uppercase">Shastriya & Light</span>
+                            <h4 class="text-base font-extrabold mt-0.5">5. Vocal (गायन प्रशिक्षण)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Assigned: <strong>Vocal Teacher</strong></p>
+                        </div>
+                        <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">Join</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inquiry Box (Only Admin Sees This) -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-comment-dots text-rose-600"></i>
+                    <span>Aapka Sawaal ya Requirement bhejein</span>
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                    आपका संदेश और WhatsApp नंबर केवल Admin के पास सुरक्षित रहता है। किसी भी Teacher को यह दिखाई नहीं देता।
+                </p>
+                <div class="space-y-3">
+                    <input id="inq-name" type="text" placeholder="Aapka Naam..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                    <input id="inq-phone" type="tel" placeholder="WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                    <textarea id="inq-msg" rows="3" placeholder="Apna sawal ya requirement yahan likhein..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                    <button onclick="submitInquiry()" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm">
+                        Admin को संदेश भेजें
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. REGISTER (₹49 + UPI) TAB ==================== -->
+        <section id="tab-register" class="hidden space-y-6">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <div>
+                        <span class="text-xs font-extrabold text-emerald-600 uppercase">✓ 100% Trusted Admission Portal</span>
+                        <h2 class="text-xl font-extrabold mt-0.5">नया विद्यार्थी पंजीकरण (Student Registration)</h2>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 text-xs font-extrabold">
+                        Indian Fee: ₹49
+                    </span>
+                </div>
+
+                <!-- PhonePe QR & UPI Payment Card -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 text-center space-y-3 max-w-md mx-auto border border-slate-700">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-bold">
+                        <span>पे PhonePe / Google Pay / Paytm Accepted</span>
+                    </div>
+              
