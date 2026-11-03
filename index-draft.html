@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>RPS Music Talim Academy</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{margin:0;background:#f5f7fb;color:#182235;font-family:Arial,sans-serif}
+.hero{background:linear-gradient(135deg,#101827,#263e63);color:white}
+.gold{color:#e8bd68}
+.btn{background:#b88938;color:white;padding:12px 18px;border-radius:10px;font-weight:bold}
+.card{background:white;border:1px solid #e5e9f0;border-radius:16px;padding:18px;box-shadow:0 4px 18px #17243b0b}
+.field{width:100%;padding:12px;border:1px solid #d7deea;border-radius:9px;background:white;margin:5px 0 12px}
+.section{padding:28px 16px;max-width:1050px;margin:auto}
+.hidden{display:none}
+nav a{padding:8px;color:white;text-decoration:none;font-size:14px}
+h2{font-size:24px;font-weight:800;margin-bottom:14px}
+small{color:#68758a}
+</style>
+</head>
+<body>
+
+<header class="hero">
+<div class="max-w-6xl mx-auto px-4 py-5">
+<div class="flex justify-between items-center gap-3">
+<div>
+<div class="gold text-xs tracking-widest">KASHI • INDIA</div>
+<h1 class="text-2xl font-extrabold">RPS MUSIC TALIM ACADEMY</h1>
+<p class="text-xs text-gray-300">Learn Music • Build Your Art • Join RPS Family</p>
+</div>
+<div class="text-3xl">🎶</div>
+</div>
+<nav class="flex flex-wrap gap-2 mt-4">
+<a href="#courses">Courses</a>
+<a href="#fees">Fees</a>
+<a href="#register">Register</a>
+<a href="#teacher">Teach with us</a>
+<a href="#account">Login</a>
+</nav>
+</div>
+</header>
+
+<section class="hero px-5 py-12 text-center">
+<div class="max-w-3xl mx-auto">
+<p class="gold font-semibold mb-3">WELCOME TO THE WORLD OF MUSIC</p>
+<h2 class="text-3xl md:text-5xl font-extrabold leading-tight">Your Musical Journey Starts Here</h2>
+<p class="text-gray-200 mt-4">Online & Offline Music Education for Children and Adults — Beginners to Advanced Learners.</p>
+<p class="gold mt-5 font-semibold">Founder: Swargiya Rajani Priya Ji | Kashi</p>
+<a href="#register" class="inline-block btn mt-6">Aaj hi register kare aur RPS family connect ho</a>
+</div>
+</section>
+
+<section class="section">
+<div class="grid md:grid-cols-3 gap-4">
+<div class="card text-center"><div class="text-3xl">🌍</div><b>Learn from Anywhere</b><p class="text-sm mt-2">India and international students</p></div>
+<div class="card text-center"><div class="text-3xl">🎓</div><b>All Learning Levels</b><p class="text-sm mt-2">Beginner, intermediate and advanced</p></div>
+<div class="card text-center"><div class="text-3xl">👤</div><b>One-to-One Classes</b><p class="text-sm mt-2">Individual 60-minute sessions</p></div>
+</div>
+</section>
+
+<section id="courses" class="section">
+<h2>Our Courses | हमारे कोर्स</h2>
+<div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+<div class="card"><div class="text-3xl">🥁</div><h3 class="font-bold text-lg">Tabla</h3><p class="text-sm">Banaras Gharana, technique, taal, accompaniment and solo training.</p></div>
+<div class="card"><div class="text-3xl">🎸</div><h3 class="font-bold text-lg">Guitar</h3><p class="text-sm">Basics, chords, rhythm and performance.</p></div>
+<div class="card"><div class="text-3xl">🎻</div><h3 class="font-bold text-lg">Sitar</h3><p class="text-sm">Foundational technique and classical music learning.</p></div>
+<div class="card"><div class="text-3xl">🎹</div><h3 class="font-bold text-lg">Piano / Harmonium</h3><p class="text-sm">Notes, melody, accompaniment and practice.</p></div>
+<div class="card"><div class="text-3xl">🎤</div><h3 class="font-bold text-lg">Vocal Music</h3><p class="text-sm">Voice training, swar, raga and music fundamentals.</p></div>
+</div>
+</section>
+
+<section id="fees" class="section">
+<h2>Course Fees | शुल्क</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card">
+<h3 class="font-bold text-xl">🇮🇳 India</h3>
+<p class="mt-3">One-time registration: <b>₹49</b></p>
+<p>Tabla: <b>₹1,299 / month</b></p>
+<p>Other courses: <b>₹1,500 / month</b></p>
+</div>
+<div class="card">
+<h3 class="font-bold text-xl">🌎 International</h3>
+<p class="mt-3">One-time registration: <b>$5</b></p>
+<p>Monthly classes: <b>$40–$80</b></p>
+<p class="text-sm mt-2">International payment is arranged separately after confirmation. Indian UPI QR is not a USD payment method.</p>
+</div>
+</div>
+<p class="text-sm mt-3">Classes are planned as individual 60-minute sessions. Timings are confirmed after application review.</p>
+</section>
+
+<section id="notice" class="section">
+<div class="card">
+<h2>Academy Notice | सूचना</h2>
+<div id="noticeList" class="text-sm">Loading latest notices...</div>
+</div>
+</section>
+
+<section id="register" class="section">
+<div class="card">
+<h2>Student Registration | विद्यार्थी पंजीकरण</h2>
+<p class="text-sm mb-4">Complete the form to apply. Your application will be reviewed by the Academy Admin.</p>
+<form id="studentForm">
+<label class="text-sm font-semibold">Full name / पूरा नाम</label>
+<input class="field" name="full_name" required maxlength="100" placeholder="Your full name">
+<label class="text-sm font-semibold">Email</label>
+<input class="field" name="email" type="email" required placeholder="Email address">
+<label class="text-sm font-semibold">Mobile / WhatsApp</label>
+<input class="field" name="phone" required maxlength="25" placeholder="Country code + mobile number">
+<label class="text-sm font-semibold">Country</label>
+<input class="field" name="country" required placeholder="Country">
+<label class="text-sm font-semibold">State / Province</label>
+<input class="field" name="state" required placeholder="State or province">
+<label class="text-sm font-semibold">City</label>
+<input class="field" name="city" required placeholder="City">
+<label class="text-sm font-semibold">Choose course</label>
+<select class="field" name="course" required>
+<option value="">Select course</option>
+<option>Tabla</option><option>Sitar</option><option>Guitar</option>
+<option>Piano / Harmonium</option><option>Vocal</option>
+</select>
+<label class="text-sm font-semibold">Learning mode</label>
+<select class="field" name="learning_mode" required>
+<option value="">Select mode</option><option>Online</option><option>Offline</option>
+</select>
+<label class="text-sm font-semibold">Learning level</label>
+<select class="field" name="level" required>
+<option value="">Select level</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+</select>
+<label class="text-sm font-semibold">Create password</label>
+<input class="field" name="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Minimum 8 characters">
+<p class="text-xs text-gray-500 mb-3">Your password is handled by Supabase Authentication. Do not share it with anyone.</p>
+<button class="btn w-full" type="submit">Submit Registration</button>
+</form>
+<div id="studentMessage" class="text-sm mt-4" aria-live="polite"></div>
+<div class="mt-5 border-t pt-4">
+<p class="font-bold">Google Form Registration</p>
+<a class="text-blue-700 underline text-sm" target="_blank" rel="noopener" href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxq/viewform?usp=header">Open Academy Google Form</a>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="card">
+<h2>Registration Payment | भुगतान</h2>
+<p>India registration fee: <b>₹49</b></p>
+<p class="text-sm mt-2">UPI ID: <b>gauravsr284@oksbi</b></p>
+<p class="text-sm">Payee: <b>RPS Talim Music Academy</b></p>
+<a id="upiLink" class="btn inline-block mt-4" href="upi://pay?pa=gauravsr284@oksbi&pn=RPS%20Talim%20Music%20Academy&am=49&cu=INR">Pay ₹49 with UPI</a>
+<p class="text-xs mt-3">Please keep your payment reference. Payment confirmation is subject to Admin verification. Do not send payment passwords or OTPs.</p>
+</div>
+</section>
+
+<section id="teacher" class="section">
+<div class="card">
+<h2>Teach with RPS | शिक्षक आवेदन</h2>
+<p class="text-sm mb-4">Qualified music educators can apply to join the Academy. Applications require Admin approval.</p>
+<form id="teacherForm">
+<input class="field" name="full_name" required placeholder="Full name">
+<input class="field" name="email" type="email" required placeholder="Email">
+<input class="field" name="phone" required placeholder="Mobile / WhatsApp">
+<input class="field" name="country" required placeholder="Country">
+<input class="field" name="city" required placeholder="City">
+<label class="text-sm font-semibold">Subjects (comma separated)</label>
+<input class="field" name="subjects" required placeholder="e.g. Guitar, Vocal">
+<input class="field" name="qualification" required placeholder="Music qualification">
+<input class="field" name="experience" required placeholder="Teaching experience">
+<select class="field" name="teaching_mode" required><option value="">Teaching mode</option><option>Online</option><option>Offline</option><option>Both</option></select>
+<textarea class="field" name="introduction" rows="3" placeholder="Short introduction"></textarea>
+<label class="text-sm"><input type="checkbox" name="terms" required> I agree to follow Academy professional conduct and teaching policies.</label>
+<button class="btn w-full mt-4" type="submit">Submit Teacher Application</button>
+</form>
+<div id="teacherMessage" class="text-sm mt-3" aria-live="polite"></div>
+</div>
+</section>
+
+<section id="account" class="section">
+<div class="card">
+<h2>Student / Teacher Login</h2>
+<form id="loginForm">
+<input class="field" name="email" type="email" required placeholder="Registered email">
+<input class="field" name="password" type="password" required placeholder="Password">
+<button class="btn w-full" type="submit">Login</button>
+</form>
+<button id="logoutBtn" class="btn mt-3 hidden" type="button">Logout</button>
+<div id="accountMessage" class="text-sm mt-3" aria-live="polite"></div>
+<div id="studentDashboard" class="hidden mt-5">
+<h3 class="font-bold text-lg">My Academy Dashboard</h3>
+<div id="studentDetails" class="text-sm mt-2"></div>
+</div>
+<div id="adminDashboard" class="hidden mt-5">
+<h3 class="font-bold text-lg">Admin Dashboard</h3>
+<p class="text-xs text-gray-500">Applications visible only according to your existing Supabase Admin RLS policies.</p>
+<div id="adminApplications" class="mt-3 text-sm">Loading applications...</div>
+</div>
+</div>
+</section>
+
+<footer class="hero text-center px-4 py-8">
+<p class="gold font-bold">RPS MUSIC TALIM ACADEMY</p>
+<p class="text-sm mt-2">Founder: Swargiya Rajani Priya Ji | Kashi</p>
+<p class="text-sm mt-2">Email: gauravsr284@gmail.com</p>
+<p class="text-sm">WhatsApp: 8317041705 | 9452848161</p>
+<div class="flex justify-center gap-4 mt-4 text-sm">
+<a href="https://wa.me/918317041705" target="_blank" rel="noopener">WhatsApp</a>
+<a href="mailto:gauravsr284@gmail.com">Email us</a>
+</div>
+<p class="text-xs text-gray-400 mt-5">© <span id="year"></span> RPS Music Talim Academy</p>
+</footer>
+
+<script>
+const SUPABASE_URL = "https://nvaucusbviqpxyttimef.supabase.co";
+const SUPABASE_KEY = "sb_publishable_dO5mE_QfcvoUM6XgTNklvg_0npwI7h1";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = (id) => document.getElementById(id);
+$("year").textContent = new Date().getFullYear();
+
+function showMessage(id, message, error=false) {
+  $(id).textContent = message;
+  $(id).style.color = error ? "#b42318" : "#167344";
+}
+function formObject(form) {
+  return Object.fromEntries(new FormData(form).entries());
+}
+function safe(value) {
+  const el = document.createElement("span");
+  el.textContent = value == null ? "" : String(value);
+  return el.innerHTML;
+}
+
+async function loadNotices() {
+  const box = $("noticeList");
+  const {data,error} = await db.from("academy_notices")
+    .select("title,message,created_at")
+    .eq("is_active",true)
+    .order("created_at",{ascending:false}).limit(10);
+  if(error) { box.textContent = "Notices are temporarily unavailable."; return; }
+  if(!data || !data.length) { box.textContent = "No new notices at present."; return; }
+  box.innerHTML = data.map(n =>
+    `<article class="border-b py-3"><b>${safe(n.title)}</b><p>${safe(n.message)}</p></article>`
+  ).join("");
+}
+loadNotices();
+
+async function submitApplication(form) {
+  const {data:{session}} = await db.auth.getSession();
+  if(!session) {
+    throw new Error("First create your account and verify your email. Then log in and submit the application again.");
+  }
+  return session;
+}
+
+$("studentForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const values = formObject(form);
+  const message = $("studentMessage");
+  message.textContent = "Please wait...";
+  try {
+    const {data,error} = await db.auth.signUp({
+      email: values.email,
+      password: values.password,
+      options: { emailRedirectTo: window.location.origin }
+    });
+    if(error) throw error;
+    if(!data.session) {
+      showMessage("studentMessage","Account created. Please verify your email, log in, and submit your application again.");
+      form.reset();
+      return;
+    }
+    const {error:insertError} = await db.from("academy_student_applications").insert({
+      user_id: data.user.id,
+      full_name: values.full_name,
+      email: values.email,
+      phone: values.phone,
+      country: values.country,
+      state: values.state,
+      city: values.city,
+      course: values.course,
+      learning_mode: values.learning_mode,
+      level: values.level
+    });
+    if(insertError) throw insertError;
+    showMessage("studentMessage","Application submitted successfully. Please wait for Admin review.");
+    form.reset();
+  } catch(error) {
+    showMessage("studentMessage",error.message || "Registration could not be completed.",true);
+  }
+});
+
+$("teacherForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const v = formObject(form);
+  try {
+    await submitApplication(form);
+    const {data:{user}} = await db.auth.getUser();
+    const {error} = await db.from("academy_teacher_applications").insert({
+      user_id:user.id,
+      full_name:v.full_name,email:v.email,phone:v.phone,
+      country:v.country,city:v.city,
+      subjects:v.subjects.split(",").map(s=>s.trim()).filter(Boolean),
+      qualification:v.qualification,experience:v.experience,
+      teaching_mode:v.teaching_mode,introduction:v.introduction,
+      terms_accepted:true
+    });
+    if(error) throw error;
+    showMessage("teacherMessage","Teacher application submitted. Admin approval is required.");
+    form.reset();
+  } catch(error) {
+    showMessage("teacherMessage",error.message || "Teacher application could not be submitted.",true);
+  }
+});
+
+async function refreshAccount() {
+  const {data:{user}} = await db.auth.getUser();
+  $("logoutBtn").classList.toggle("hidden",!user);
+  $("studentDashboard").classList.add("hidden");
+  $("adminDashboard").classList.add("hidden");
+  if(!user) return;
+
+  showMessage("accountMessage","Signed in: " + user.email);
+  const {data:roles} = await db.from("academy_user_roles")
+    .select("role").eq("user_id",user.id);
+  const isAdmin = (roles || []).some(r => r.role === "admin");
+
+  if(isAdmin) {
+    $("adminDashboard").classList.remove("hidden");
+    const box = $("adminApplications");
+    const {data,error} = await db.from("academy_student_applications")
+      .select("full_name,email,phone,country,state,city,course,learning_mode,level,application_status,created_at")
+      .order("created_at",{ascending:false}).limit(100);
+    if(error) { box.textContent = "Could not load applications: " + error.message; return; }
+    if(!data || !data.length) { box.textContent = "No applications found."; return; }
+    box.innerHTML = data.map(a => `
+      <article class="border rounded-xl p-3 mb-3">
+      <b>${safe(a.full_name)}</b> — ${safe(a.course)}
+      <p>${safe(a.email)} | ${safe(a.phone)}</p>
+      <p>${safe(a.city)}, ${safe(a.state)}, ${safe(a.country)}</p>
+      <p>Mode: ${safe(a.learning_mode)} | Level: ${safe(a.level)}</p>
+      <p>Status: ${safe(a.application_status || "Pending")}</p>
+      </article>`).join("");
+  } else {
+    $("studentDashboard").classList.remove("hidden");
+    const {data,error} = await db.from("academy_students")
+      .select("full_name,course,learning_mode,level,status,monthly_fee,currency")
+      .eq("user_id",user.id).limit(10);
+    const box = $("studentDetails");
+    if(error) box.textContent = "Your student profile is not available yet.";
+    else if(!data || !data.length) box.textContent = "Your application is awaiting Admin review.";
+    else box.innerHTML = data.map(s =>
+      `<p class="border-b py-2"><b>${safe(s.full_name)}</b><br>
+      Course: ${safe(s.course)} | ${safe(s.learning_mode)}<br>
+      Level: ${safe(s.level)} | Status: ${safe(s.status)}</p>`
+    ).join("");
+  }
+}
+
+$("loginForm").addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const v=formObject(event.currentTarget);
+  showMessage("accountMessage","Signing in...");
+  const {error}=await db.auth.signInWithPassword({email:v.email,password:v.password});
+  if(error) { showMessage("accountMessage",error.message,true); return; }
+  await refreshAccount();
+});
+$("logoutBtn").addEventListener("click",async()=>{
+  await db.auth.signOut();
+  $("accountMessage").textContent="You have been logged out.";
+  $("studentDashboard").classList.add("hidden");
+  $("adminDashboard").classList.add("hidden");
+  $("logoutBtn").classList.add("hidden");
+});
+db.auth.onAuthStateChange(()=>{ refreshAccount(); });
+refreshAccount();
+</script>
+</body>
+  </html>
+  
