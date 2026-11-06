@@ -1,269 +1,111 @@
-<!DOCTYPE html>
-<html lang="hi" class="h-full">
+<!doctype html>
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPS Music Talim Academy - Kashi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
-        };
-
-        window.switchTab = function(tabName) {
-            var tabs = ['home', 'register', 'student', 'teacher', 'admin'];
-            for (var i = 0; i < tabs.length; i++) {
-                var section = document.getElementById('tab-' + tabs[i]);
-                var btn = document.getElementById('nav-' + tabs[i]);
-                if (section) section.classList.toggle('hidden', tabs[i] !== tabName);
-                if (btn) {
-                    btn.className = tabs[i] === tabName 
-                        ? "px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap" 
-                        : "px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap";
-                }
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.toggleTheme = function() {
-            var html = document.documentElement;
-            var icon = document.getElementById('theme-icon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                if (icon) icon.className = 'fa-solid fa-moon text-slate-700';
-                localStorage.setItem('rps_theme', 'light');
-            } else {
-                html.classList.add('dark');
-                if (icon) icon.className = 'fa-solid fa-sun text-amber-400';
-                localStorage.setItem('rps_theme', 'dark');
-            }
-        };
-    </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 22s linear infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RPS Music Talim Academy</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#10243a;--gold:#c69b45;--bg:#f5f7fa;--ink:#172536}*{box-sizing:border-box}body{margin:0;font:15px system-ui,Arial;background:var(--bg);color:var(--ink)}header{background:var(--navy);color:white;padding:22px 16px;text-align:center}header h1{margin:4px;font-size:25px}header p{margin:4px;color:#e7d7b5}.wrap{max-width:1050px;margin:auto;padding:16px}.card{background:white;border:1px solid #e2e7ed;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #14263a0b}h2{font-size:19px;margin:4px 0 12px}h3{font-size:16px;margin:4px 0 10px}input,select,textarea,button{font:inherit;width:100%;padding:11px;border:1px solid #cbd4df;border-radius:9px;margin:5px 0}textarea{min-height:80px}button{background:var(--navy);color:white;border:0;font-weight:650;cursor:pointer}button.alt{background:#eee;color:#14263a}button.gold{background:var(--gold);color:#111}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.muted{color:#64748b;font-size:13px}.hidden{display:none}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#f2ead9;color:#5d4516;font-size:12px}.item{padding:12px 0;border-top:1px solid #e7ebef}.item a{overflow-wrap:anywhere}.notice{background:#fff8e9;border-left:4px solid var(--gold);padding:12px;border-radius:8px;margin:8px 0}.danger{color:#b42318}.ok{color:#087443}a{color:#1557a5}footer{text-align:center;padding:22px;color:#64748b}
+</style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
-
-    <div class="bg-amber-500 text-slate-950 text-xs sm:text-sm font-bold py-2 overflow-hidden shadow-sm">
-        <div class="animate-marquee">
-            🎵 RPS Music Talim Academy - Kashi (Banaras Gharana Music Center) • नए बैच शुरू हैं! • 100% Trusted Platform • Indian Student Registration Fee: ₹49 Only • रजिस्ट्रेशन के तुरंत बाद क्लास शुरू होने का समय बताया जाएगा!
-        </div>
-    </div>
-
-    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-5xl mx-auto px-4 py-3">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-600 to-amber-500 flex items-center justify-center text-white text-xl font-extrabold shadow-md">
-                        <i class="fa-solid fa-music"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-                            RPS Music Talim Academy
-                        </h1>
-                        <p class="text-xs font-semibold text-rose-600 dark:text-rose-400">
-                            Founder: Swargiya Rajani Priya Ji | Kashi
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700" title="Light/Night Mode">
-                        <i id="theme-icon" class="fa-solid fa-moon text-slate-700"></i>
-                    </button>
-                    <a href="https://wa.me/918317041705" target="_blank" class="px-3 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 overflow-x-auto pt-3 pb-1 no-scrollbar">
-                <button id="nav-home" onclick="switchTab('home')" class="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-sm transition whitespace-nowrap">Home</button>
-                <button id="nav-register" onclick="switchTab('register')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Register (₹49)</button>
-                <button id="nav-student" onclick="switchTab('student')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Student</button>
-                <button id="nav-teacher" onclick="switchTab('teacher')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Teacher</button>
-                <button id="nav-admin" onclick="switchTab('admin')" class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-100 transition whitespace-nowrap">Admin</button>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
-
-        <!-- HOME TAB -->
-        <section id="tab-home" class="space-y-6">
-            <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div class="flex items-start gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-shield-halved text-lg"></i></div>
-                    <div>
-                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">100% TRUSTED & VERIFIED MUSIC ACADEMY PLATFORM</span>
-                        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-0.5">काशी बनारस घराना का विश्वसनीय संस्थान • रजिस्ट्रेशन के तुरंत बाद आपको बैच और क्लास शुरू होने का समय दिया जाता है।</p>
-                    </div>
-                </div>
-                <button onclick="switchTab('register')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 shadow-sm">अभी रजिस्टर करें (₹49)</button>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm text-center space-y-5">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800">
-                    <span>ॐ Founder: Swargiya Rajani Priya Ji | Kashi</span>
-                </div>
-
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Learn With Professional Teachers</h2>
-                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Sitar, Tabla (Major), Guitar, Piano/Harmonium & Vocal Training</p>
-
-                <div class="bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-left max-w-xl mx-auto space-y-4">
-                    <h3 class="text-base font-extrabold text-center text-rose-600 dark:text-rose-400">Fee Structure & Admission Details</h3>
-                    <div class="space-y-1.5 text-sm">
-                        <p class="font-bold text-slate-900 dark:text-white">🇮🇳 Domestic Students (भारतीय विद्यार्थी):</p>
-                        <ul class="space-y-1 text-slate-700 dark:text-slate-300 pl-4 list-disc">
-                            <li>Registration Fee: <strong class="text-emerald-600 dark:text-emerald-400">₹49 (One-Time)</strong></li>
-                            <li>Tabla Classes: <strong>₹1,200 / month</strong></li>
-                            <li>Other Instruments (Sitar, Guitar, Piano, Vocal): <strong>₹1,500 / month</strong></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto pt-2">
-                    <button onclick="switchTab('register')" class="flex-1 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-sm shadow-md hover:opacity-95 transition">
-                        <i class="fa-solid fa-user-check mr-1.5"></i> वेबसाइट पर रजिस्टर करें (₹49 UPI)
-                    </button>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxQ/viewform?usp=header" target="_blank" class="flex-1 py-3.5 px-5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-md transition text-center">
-                        <i class="fa-solid fa-file-lines mr-1.5"></i> Google Form Registration
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- REGISTER TAB -->
-        <section id="tab-register" class="hidden space-y-6">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
-                <div>
-                    <span class="text-xs font-extrabold text-emerald-600 uppercase">✓ Database Connected Portal</span>
-                    <h2 class="text-xl font-extrabold mt-0.5">नया विद्यार्थी पंजीकरण (Live Registry)</h2>
-                </div>
-
-                <div class="bg-slate-900 text-white rounded-2xl p-5 text-center space-y-3 max-w-md mx-auto border border-slate-700">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-bold">
-                        <span>पे PhonePe / Google Pay Accepted</span>
-                    </div>
-                    <p class="text-xs text-slate-300">भारतीय विद्यार्थी <strong>₹49</strong> रजिस्ट्रेशन फीस जमा करें:</p>
-                    <div class="bg-white p-3 rounded-2xl inline-block mx-auto">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3D8317041705%40ybl%26pn%3DGAURAV%2520SHRIVASTAVA%26am%3D49%26cu%3DINR" alt="PhonePe QR" class="w-44 h-44 mx-auto">
-                    </div>
-                    <p class="text-sm font-extrabold tracking-wide text-amber-400">GAURAV SHRIVASTAVA</p>
-                    <p class="text-xs text-slate-300">UPI: <strong>8317041705</strong></p>
-                </div>
-
-                <div class="space-y-4 max-w-xl mx-auto pt-2">
-                    <div><label class="block text-xs font-bold mb-1">Full Name *</label><input id="reg-name" type="text" placeholder="अपना नाम लिखें..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm"></div>
-                    <div><label class="block text-xs font-bold mb-1">WhatsApp Number *</label><input id="reg-phone" type="tel" placeholder="WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm"></div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1">Select Course *</label>
-                        <select id="reg-course" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm">
-                            <option value="Tabla">Tabla (₹1,200/month)</option>
-                            <option value="Sitar">Sitar (₹1,500/month)</option>
-                            <option value="Guitar">Guitar (₹1,500/month)</option>
-                            <option value="Piano / Harmonium">Piano / Harmonium (₹1,500/month)</option>
-                            <option value="Vocal">Vocal (₹1,500/month)</option>
-                        </select>
-                    </div>
-                    <button id="btn-register" onclick="registerToDatabase()" class="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md transition">
-                        Submit & Create Database Record
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- STUDENT TAB -->
-        <section id="tab-student" class="hidden space-y-6">
-            <div id="student-login-box" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
-                <h2 class="text-xl font-extrabold text-center">Student Live Login</h2>
-                <input id="stu-login-phone" type="tel" placeholder="Enter WhatsApp Number..." class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm">
-                <button id="btn-stu-login" onclick="loginStudentDB()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Fetch Data from Supabase</button>
-            </div>
-
-            <div id="student-dashboard" class="hidden space-y-6">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 rounded-3xl p-5 flex items-center justify-between">
-                    <div>
-                        <h3 id="stu-dash-name" class="text-lg font-extrabold">Student Name</h3>
-                        <p id="stu-dash-course" class="text-xs text-slate-500 font-bold">Course</p>
-                    </div>
-                    <button onclick="logoutStudent()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-rose-600">Logout</button>
-                </div>
-
-                <div class="bg-white dark:bg-slate-900 border rounded-3xl overflow-hidden shadow-sm">
-                    <div class="bg-emerald-700 text-white px-5 py-3.5">
-                        <h4 class="text-sm font-extrabold">Live Database Private Chat (1-on-1)</h4>
-                        <p class="text-[11px] text-emerald-100">Connected to Supabase Postgres</p>
-                    </div>
-                    <div id="stu-chat-messages" class="h-72 overflow-y-auto p-4 space-y-3 bg-slate-100 dark:bg-slate-950"></div>
-                    <div class="p-3 bg-white dark:bg-slate-900 border-t flex gap-2">
-                        <input id="stu-chat-input" type="text" placeholder="Type a message..." class="flex-1 px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sm border-0">
-                        <button onclick="sendStudentMessageDB()" class="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-bold">Send</button>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
-                    <h4 class="text-base font-extrabold text-amber-500"><i class="fa-solid fa-folder-open mr-2"></i>Study Material Library (Cloud)</h4>
-                    <div id="stu-materials-list" class="space-y-2"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TEACHER TAB -->
-        <section id="tab-teacher" class="hidden space-y-6">
-            <div id="teacher-login-box" class="bg-white dark:bg-slate-900 border rounded-3xl p-6 shadow-sm max-w-md mx-auto space-y-4">
-                <h2 class="text-xl font-extrabold text-amber-600">Teacher Room</h2>
-                <select id="tea-login-role" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border text-sm font-semibold">
-                    <option value="Tabla Teacher">Tabla Teacher</option>
-                    <option value="Sitar Teacher">Sitar Teacher</option>
-                    <option value="Vocal Teacher">Vocal Teacher</option>
-                </select>
-                <input id="tea-login-code" type="password" placeholder="Code (5678)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
-                <button onclick="loginTeacher()" class="w-full py-3.5 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-sm">Enter Room</button>
-            </div>
-
-            <div id="teacher-dashboard" class="hidden space-y-6">
-                <div class="bg-white border rounded-3xl p-5 flex justify-between">
-                    <h3 id="tea-dash-title" class="text-xl font-extrabold text-slate-900">Teacher Dashboard</h3>
-                    <button onclick="logoutTeacher()" class="text-xs font-bold text-rose-600">Logout</button>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-3">
-                    <h4 class="text-base font-extrabold">📤 Upload Material to DB</h4>
-                    <input id="tea-mat-title" type="text" placeholder="Title (e.g. Teen Taal Kayda)" class="w-full px-4 py-2.5 rounded-xl border text-sm">
-                    <textarea id="tea-mat-desc" rows="2" placeholder="Link or Text notes..." class="w-full px-4 py-2.5 rounded-xl border text-sm"></textarea>
-                    <button onclick="uploadMaterialDB()" class="w-full py-3 rounded-xl bg-rose-600 text-white font-bold text-xs">Save to Supabase</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADMIN TAB -->
-        <section id="tab-admin" class="hidden space-y-6">
-            <div id="admin-login-box" class="bg-white border rounded-3xl p-6 max-w-md mx-auto space-y-4">
-                <h2 class="text-xl font-extrabold text-center text-slate-900">Admin Control Room</h2>
-                <input id="adm-pass" type="password" placeholder="Admin Pass (1234)" class="w-full px-4 py-3 rounded-xl bg-slate-50 border text-sm">
-                <button onclick="loginAdmin()" class="w-full py-3.5 rounded-xl bg-rose-600 text-white font-bold text-sm">Master Login</button>
-            </div>
-
-            <div id="admin-dashboard" class="hidden space-y-6">
-                <div class="bg-slate-900 text-white rounded-3xl p-5 flex justify-between">
-                    <h3 class="text-xl font-extrabold text-amber-400">Gaurav Srivastava (Admin)</h3>
-                    <button onclick="logoutAdmin()" class="px-4 py-2 bg-white/10 rounded-xl text-xs font-bold">Logout</button>
-                </div>
-
-                <div class="bg-white dark:bg-slate-900 border rounded-3xl p-5 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-lg font-extrabold text-rose-600">Live Student Chat Inbox</h4>
-                        <button onclick="fetchAdminData()" class="text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg shadow-sm"><i class="fa-solid fa-rotate mr-1"></i>Refresh DB</button>
-                    </div>
-                    
-          
+<body>
+<header><div class="pill">Founder: Swargiya Rajani Priya Ji | Kashi</div><h1>RPS Music Talim Academy</h1><p>Learn • Practice • Perform | संगीत की व्यवस्थित शिक्षा</p></header>
+<main class="wrap">
+<section id="public">
+ <div class="card"><h2>हमारे Courses</h2><div class="grid">
+ <div>🥁 Tabla</div><div>🎸 Guitar</div><div>🎹 Piano / Harmonium</div><div>🎻 Sitar</div><div>🎤 Vocal</div></div>
+ <p class="muted">Online और offline • Beginner से advanced • One-to-one classes</p>
+ <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxq/viewform?usp=header" target="_blank" rel="noopener"><button class="gold">आज ही Register करें — Google Form</button></a>
+ <p><b>भारत:</b> Registration ₹49 • Tabla ₹1,299/month • अन्य courses ₹1,500/month</p>
+ <p><b>International:</b> Registration $5 • Monthly $40–$80</p>
+ <p class="muted">UPI: gauravsr284@oksbi • Payee: RPS Talim Music Academy</p></div>
+</section>
+<section class="card" id="auth">
+ <h2>Portal Login</h2><div class="grid"><input id="email" type="email" placeholder="Registered email"><input id="password" type="password" placeholder="Password"></div>
+ <div class="row"><button onclick="login()">Login</button><button class="alt" onclick="signup()">Create student login</button></div>
+ <p class="muted">Teacher/Admin access केवल approval के बाद मिलेगा। Email confirmation चालू हो तो inbox verify करें।</p>
+ <p id="authmsg" class="muted"></p>
+</section>
+<section id="portal" class="hidden">
+ <div class="card"><div class="row"><div><h2 id="welcome">Portal</h2><p id="roleline" class="muted"></p></div><div><button class="alt" onclick="logout()">Logout</button></div></div></div>
+ <div class="card"><h2>Notices</h2><div id="notices"></div></div>
+ <div class="card"><h2>My Classes</h2><div id="classes"></div></div>
+ <div class="card"><h2>Study Material</h2><div id="materials"></div></div>
+ <div class="card"><h2>Private message to Admin</h2><textarea id="msgtext" placeholder="अपना message लिखें"></textarea><button onclick="sendAdminMessage()">Admin को message भेजें</button><div id="messages"></div></div>
+ <div id="teacherArea" class="hidden">
+  <div class="card"><h2>Teacher: Assigned students</h2><div id="assigned"></div></div>
+  <div class="card"><h2>Upload study material</h2>
+   <select id="matstudent"></select><input id="mattitle" placeholder="Material title"><input id="matcourse" placeholder="Course"><textarea id="matdesc" placeholder="Description"></textarea><input id="matfile" type="file" accept=".pdf,image/*,audio/mpeg,video/mp4,.docx"><button onclick="uploadMaterial()">Upload material</button><p class="muted">केवल assigned active student को material दिया जा सकता है। Max 50 MB.</p>
+  </div>
+  <div class="card"><h2>Teacher: Schedule one-to-one class</h2>
+   <select id="classstudent"></select><input id="classcourse" placeholder="Course"><div class="grid"><input id="classdate" type="date"><input id="classtime" type="time"></div><select id="provider"><option value="jitsi">Jitsi Meet</option><option value="google_meet">Google Meet</option></select><input id="meetingurl" placeholder="Meeting link (Jitsi / Google Meet)"><button onclick="scheduleClass()">Send class for Admin approval</button>
+  </div>
+  <div class="card"><h2>Teacher application</h2><p class="muted">Teacher role Admin approval के बाद ही सक्रिय होगा।</p><input id="tname" placeholder="Full name"><input id="tphone" placeholder="Phone"><input id="tcity" placeholder="City"><input id="tcountry" placeholder="Country"><input id="tsubjects" placeholder="Subjects (comma separated; Tabla नहीं)"><input id="tqual" placeholder="Qualification"><input id="texp" placeholder="Experience"><textarea id="tintro" placeholder="Introduction"></textarea><label><input id="tterms" type="checkbox" style="width:auto"> I accept academy terms and professional conduct rules</label><button onclick="applyTeacher()">Submit teacher application</button>
+  </div>
+ </div>
+ <div id="adminArea" class="hidden">
+  <div class="card"><h2>Admin: Students</h2><div id="adminstudents"></div>
+   <h3>Add / link student account</h3><p class="muted">पहले Supabase Dashboard → Authentication → Users में student user बनाएं। फिर उसका User UID यहाँ डालकर record link करें।</p>
+   <input id="suid" placeholder="Student Auth User UID (optional)"><input id="sname" placeholder="Student full name"><input id="semail" placeholder="Email"><input id="sphone" placeholder="Phone"><div class="grid"><input id="scountry" placeholder="Country"><input id="sstate" placeholder="State"><input id="scity" placeholder="City"></div><select id="scourse"><option>Tabla</option><option>Sitar</option><option>Guitar</option><option>Piano</option><option>Harmonium</option><option>Vocal</option></select><select id="sfee"><option value="1299">Tabla ₹1299</option><option value="1500">Other India ₹1500</option><option value="40">International $40</option><option value="80">International $80</option></select><select id="scurrency"><option>INR</option><option>USD</option></select><button onclick="addStudent()">Save student</button>
+  </div>
+  <div class="card"><h2>Admin: Teacher applications</h2><div id="adminteachers"></div></div>
+  <div class="card"><h2>Admin: Assign teacher</h2><select id="assignstudent"></select><select id="assignteacher"></select><button onclick="assignTeacher()">Assign teacher</button></div>
+  <div class="card"><h2>Admin: Class schedule</h2><div id="adminclasses"></div></div>
+  <div class="card"><h2>Admin: Payments</h2><div id="adminpayments"></div></div>
+  <div class="card"><h2>Admin: Publish notice</h2><input id="noticetitle" placeholder="Notice title"><textarea id="noticemsg" placeholder="Notice"></textarea><button onclick="publishNotice()">Publish</button></div>
+  <div class="card"><h2>Admin: Upload material</h2><select id="adminmatstudent"></select><input id="adminmattitle" placeholder="Material title"><input id="adminmatcourse" placeholder="Course"><input id="adminmatfile" type="file"><button onclick="adminUploadMaterial()">Upload for student</button></div>
+ </div>
+</section>
+</main><footer>RPS Music Talim Academy • Help: gauravsr284@gmail.com • WhatsApp: 8317041705 / 9452848161</footer>
+<script>
+const SUPABASE_URL='https://nvaucusbviqpxyttimef.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_dO5mE_QfcvoUM6XgTNklvg_0npwI7h1';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let user=null, role='student', adminId=null, students=[], teachers=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function say(id,msg){$(id).textContent=msg}
+async function login(){let {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return say('authmsg',error.message);await boot(data.user)}
+async function signup(){let {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value});if(error)return say('authmsg',error.message);say('authmsg','Account request submitted. Email confirmation करें, फिर login करें।');}
+async function logout(){await db.auth.signOut();location.reload()}
+async function boot(u){user=u;let {data:rr,error}=await db.from('academy_user_roles').select('role').eq('user_id',u.id).single();if(error){say('authmsg','Role नहीं मिला। Supabase SQL setup और email verification जाँचें।');return}role=rr.role;
+$('public').classList.add('hidden');$('auth').classList.add('hidden');$('portal').classList.remove('hidden');$('welcome').textContent='Welcome, '+(u.email||'RPS member');$('roleline').textContent='Signed in as '+role;
+if(role==='admin'){$('adminArea').classList.remove('hidden');await loadAdmin()}
+if(role==='teacher'){$('teacherArea').classList.remove('hidden');await loadTeacher()}
+await loadCommon()}
+async function loadCommon(){
+let {data:n}=await db.from('academy_notices').select('*').eq('is_active',true).order('created_at',{ascending:false});$('notices').innerHTML=(n||[]).map(x=>`<div class="notice"><b>${esc(x.title)}</b><p>${esc(x.message)}</p></div>`).join('')||'No current notices';
+let q=db.from('academy_class_sessions').select('*').order('session_date');if(role==='student')q=q.eq('student_user_id',user.id);if(role==='teacher')q=q.eq('teacher_user_id',user.id);let {data:c}=await q;
+$('classes').innerHTML=(c||[]).map(x=>`<div class="item"><b>${esc(x.course)}</b> — ${esc(x.session_date)} ${esc(x.start_time)} (${x.duration_minutes} min)<br>${esc(x.meeting_provider)} · <a href="${esc(x.meeting_url)}" target="_blank" rel="noopener">Join class</a></div>`).join('')||'No classes scheduled';
+let {data:m}=await db.from('academy_study_materials').select('*').order('created_at',{ascending:false});
+$('materials').innerHTML=await Promise.all((m||[]).map(async x=>{let {data}=await db.storage.from('academy-study-materials').createSignedUrl(x.storage_path,300);return `<div class="item"><b>${esc(x.title)}</b> · ${esc(x.course)}<br>${data?.signedUrl?`<a href="${esc(data.signedUrl)}" target="_blank" rel="noopener">Open / Download</a>`:'Access unavailable'}</div>`})).then(a=>a.join(''))||'No material assigned';
+let {data:msgs}=await db.from('academy_messages').select('*').or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`).order('created_at');$('messages').innerHTML=(msgs||[]).map(x=>`<div class="item"><small>${x.sender_id===user.id?'You':'Admin'}:</small> ${esc(x.message)}</div>`).join('');
+}
+async function adminUid(){let {data}=await db.from('academy_user_roles').select('user_id').eq('role','admin').limit(1).single();return data?.user_id}
+async function sendAdminMessage(){let message=$('msgtext').value.trim();if(!message)return;let recipient=role==='admin'?null:await adminUid();if(role==='admin'){alert('Admin inbox view is via Messages table.');return}let {error}=await db.from('academy_messages').insert({sender_id:user.id,recipient_id:recipient,message});if(error)return alert(error.message);$('msgtext').value='';await loadCommon()}
+async function loadTeacher(){
+let {data:s}=await db.from('academy_students').select('user_id,full_name,course,status').eq('assigned_teacher_user_id',user.id).eq('status','active');students=s||[];
+['matstudent','classstudent'].forEach(id=>$(id).innerHTML=students.map(x=>`<option value="${x.user_id}">${esc(x.full_name)} — ${esc(x.course)}</option>`).join(''));
+$('assigned').innerHTML=students.map(x=>`<div class="item">${esc(x.full_name)} · ${esc(x.course)}</div>`).join('')||'No assigned students yet';
+}
+async function uploadFor(studentId,title,course,file,desc=''){if(!studentId||!file||!title||!course)return alert('Student, title, course और file भरें');let path=`${studentId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;let {error:up}=await db.storage.from('academy-study-materials').upload(path,file,{upsert:false});if(up)return alert('Upload error: '+up.message);let {error}=await db.from('academy_study_materials').insert({title,description:desc,course,student_user_id:studentId,storage_path:path,uploaded_by:user.id});if(error){await db.storage.from('academy-study-materials').remove([path]);return alert('Record error: '+error.message)}alert('Material uploaded');await loadCommon()}
+async function uploadMaterial(){await uploadFor($('matstudent').value,$('mattitle').value,$('matcourse').value,$('matfile').files[0],$('matdesc').value)}
+async function scheduleClass(){let p=$('provider').value,url=$('meetingurl').value.trim();if(!url.startsWith('https://'))return alert('Valid https meeting link डालें');let {error}=await db.from('academy_class_sessions').insert({student_user_id:$('classstudent').value,teacher_user_id:user.id,course:$('classcourse').value,session_date:$('classdate').value,start_time:$('classtime').value,duration_minutes:60,meeting_provider:p,meeting_url:url});if(error)return alert(error.message);alert('Class schedule saved. Admin/assigned student can view according to access rules.');await loadCommon()}
+async function applyTeacher(){let subjects=$('tsubjects').value.split(',').map(s=>s.trim()).filter(Boolean).filter(s=>s.toLowerCase()!=='tabla');let payload={user_id:user.id,full_name:$('tname').value,email:user.email,phone:$('tphone').value,country:$('tcountry').value,city:$('tcity').value,subjects,qualification:$('tqual').value,experience:$('texp').value,introduction:$('tintro').value,terms_accepted:$('tterms').checked};let {error}=await db.from('academy_teacher_applications').insert(payload);alert(error?error.message:'Application submitted for Admin review')}
+async function loadAdmin(){
+let {data:s}=await db.from('academy_students').select('*').order('created_at',{ascending:false});students=s||[];
+$('adminstudents').innerHTML=students.map(x=>`<div class="item"><b>${esc(x.full_name)}</b> · ${esc(x.course)} · ${esc(x.status)}<br>${esc(x.email)} · ${esc(x.city)}, ${esc(x.country)} · UID ${esc(x.user_id||'not linked')}</div>`).join('')||'No students';
+let {data:t}=await db.from('academy_teacher_applications').select('*').order('created_at',{ascending:false});$('adminteachers').innerHTML=(t||[]).map(x=>`<div class="item"><b>${esc(x.full_name)}</b> · ${esc(x.subjects?.join(', '))} · ${esc(x.application_status)}<br>${esc(x.qualification)} · ${esc(x.experience)}<br><button onclick="approveTeacher('${x.id}','${x.user_id}','${esc(x.full_name)}','${esc(x.email||'')}','${esc(x.phone||'')}','${esc(x.country||'')}','${esc(x.city||'')}','${esc((x.subjects||[]).join('|'))}','${esc(x.qualification||'')}','${esc(x.experience||'')}','${esc(x.introduction||'')}')">Approve teacher</button></div>`).join('')||'No applications';
+let {data:tt}=await db.from('academy_teachers').select('user_id,full_name');teachers=tt||[];$('assignstudent').innerHTML=students.filter(x=>x.user_id).map(x=>`<option value="${x.user_id}">${esc(x.full_name)} — ${esc(x.course)}</option>`).join('');$('assignteacher').innerHTML=teachers.map(x=>`<option value="${x.user_id}">${esc(x.full_name)}</option>`).join('');
+let {data:c}=await db.from('academy_class_sessions').select('*').order('session_date');$('adminclasses').innerHTML=(c||[]).map(x=>`<div class="item">${esc(x.course)} · ${esc(x.session_date)} ${esc(x.start_time)} · ${esc(x.meeting_provider)} · <a href="${esc(x.meeting_url)}" target="_blank">Link</a></div>`).join('')||'No class schedules';
+let {data:p}=await db.from('academy_payments').select('*').order('created_at',{ascending:false});$('adminpayments').innerHTML=(p||[]).map(x=>`<div class="item">${esc(x.student_user_id)} · ${x.currency} ${x.amount} · ${esc(x.payment_status)} · ${esc(x.transaction_reference)}<br><button onclick="verifyPayment('${x.id}','verified')">Verify</button> <button class="alt" onclick="verifyPayment('${x.id}','rejected')">Reject</button></div>`).join('')||'No payment records';
+$('adminmatstudent').innerHTML=students.filter(x=>x.user_id).map(x=>`<option value="${x.user_id}">${esc(x.full_name)}</option>`).join('');
+}
+async function addStudent(){let uid=$('suid').value.trim()||null;let {error}=await db.from('academy_students').insert({user_id:uid,full_name:$('sname').value,email:$('semail').value,phone:$('sphone').value,country:$('scountry').value,state:$('sstate').value,city:$('scity').value,course:$('scourse').value,monthly_fee:Number($('sfee').value),currency:$('scurrency').value,status:uid?'active':'pending'});if(error)return alert(error.message);alert('Student record saved');await loadAdmin()}
+async function assignTeacher(){let {error}=await db.from('academy_students').update({assigned_teacher_user_id:$('assignteacher').value,status:'active'}).eq('user_id',$('assignstudent').value);if(error)return alert(error.message);alert('Teacher assigned');await loadAdmin()}
+async function approveTeacher(id,uid,name,email,phone,country,city,subjects,qualification,experience,introduction){let {error:e}=await db.from('academy_user_roles').upsert({user_id:uid,role:'teacher'});if(e)return alert('Role update: '+e.message);let {error}=await db.from('academy_teachers').upsert({user_id:uid,full_name:name,email,phone,country,city,subjects:subjects.split('|').filter(Boolean),qualification,experience,introduction});if(error)return alert(error.message);await db.from('academy_teacher_applications').update({application_status:'approved'}).eq('id',id);alert('Teacher approved');await loadAdmin()}
+async function publishNotice(){let {error}=await db.from('academy_notices').insert({title:$('noticetitle').value,message:$('noticemsg').value});if(error)return alert(error.message);alert('Notice published');await loadCommon()}
+async function adminUploadMaterial(){await uploadFor($('adminmatstudent').value,$('adminmattitle').value,$('adminmatcourse').value,$('adminmatfile').files[0])}
+async function verifyPayment(id,status){let {error}=await db.from('academy_payments').update({payment_status:status}).eq('id',id);if(error)return alert(error.message);await loadAdmin()}
+db.auth.getSession().then(({data})=>{if(data.session)boot(data.session.user)});
+</script></body></html>
