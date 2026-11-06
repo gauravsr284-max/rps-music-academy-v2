@@ -1,111 +1,271 @@
-<!doctype html>
-<html lang="hi">
+<!DOCTYPE html>
+<html lang="hi" class="scroll-smooth">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RPS Music Talim Academy</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--navy:#10243a;--gold:#c69b45;--bg:#f5f7fa;--ink:#172536}*{box-sizing:border-box}body{margin:0;font:15px system-ui,Arial;background:var(--bg);color:var(--ink)}header{background:var(--navy);color:white;padding:22px 16px;text-align:center}header h1{margin:4px;font-size:25px}header p{margin:4px;color:#e7d7b5}.wrap{max-width:1050px;margin:auto;padding:16px}.card{background:white;border:1px solid #e2e7ed;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #14263a0b}h2{font-size:19px;margin:4px 0 12px}h3{font-size:16px;margin:4px 0 10px}input,select,textarea,button{font:inherit;width:100%;padding:11px;border:1px solid #cbd4df;border-radius:9px;margin:5px 0}textarea{min-height:80px}button{background:var(--navy);color:white;border:0;font-weight:650;cursor:pointer}button.alt{background:#eee;color:#14263a}button.gold{background:var(--gold);color:#111}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.muted{color:#64748b;font-size:13px}.hidden{display:none}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#f2ead9;color:#5d4516;font-size:12px}.item{padding:12px 0;border-top:1px solid #e7ebef}.item a{overflow-wrap:anywhere}.notice{background:#fff8e9;border-left:4px solid var(--gold);padding:12px;border-radius:8px;margin:8px 0}.danger{color:#b42318}.ok{color:#087443}a{color:#1557a5}footer{text-align:center;padding:22px;color:#64748b}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPS Music Talim Academy V2 | Kashi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #070a12; color: #f8fafc; overflow-x: hidden; }
+        .font-royal { font-family: 'Cinzel', serif; }
+        .gold-grad { background: linear-gradient(135deg, #f59e0b 0%, #fde047 50%, #d97706 100%); }
+        .gold-text { background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #fbbf24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.22); }
+        .glass-emerald { background: rgba(6, 78, 59, 0.35); backdrop-filter: blur(16px); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .kashi-bg {
+            background: linear-gradient(180deg, rgba(7, 10, 18, 0.65) 0%, rgba(7, 10, 18, 0.96) 100%),
+                        url('https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1800&q=85') center/cover no-repeat;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #d97706; border-radius: 3px; }
+    </style>
 </head>
-<body>
-<header><div class="pill">Founder: Swargiya Rajani Priya Ji | Kashi</div><h1>RPS Music Talim Academy</h1><p>Learn • Practice • Perform | संगीत की व्यवस्थित शिक्षा</p></header>
-<main class="wrap">
-<section id="public">
- <div class="card"><h2>हमारे Courses</h2><div class="grid">
- <div>🥁 Tabla</div><div>🎸 Guitar</div><div>🎹 Piano / Harmonium</div><div>🎻 Sitar</div><div>🎤 Vocal</div></div>
- <p class="muted">Online और offline • Beginner से advanced • One-to-one classes</p>
- <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxq/viewform?usp=header" target="_blank" rel="noopener"><button class="gold">आज ही Register करें — Google Form</button></a>
- <p><b>भारत:</b> Registration ₹49 • Tabla ₹1,299/month • अन्य courses ₹1,500/month</p>
- <p><b>International:</b> Registration $5 • Monthly $40–$80</p>
- <p class="muted">UPI: gauravsr284@oksbi • Payee: RPS Talim Music Academy</p></div>
-</section>
-<section class="card" id="auth">
- <h2>Portal Login</h2><div class="grid"><input id="email" type="email" placeholder="Registered email"><input id="password" type="password" placeholder="Password"></div>
- <div class="row"><button onclick="login()">Login</button><button class="alt" onclick="signup()">Create student login</button></div>
- <p class="muted">Teacher/Admin access केवल approval के बाद मिलेगा। Email confirmation चालू हो तो inbox verify करें।</p>
- <p id="authmsg" class="muted"></p>
-</section>
-<section id="portal" class="hidden">
- <div class="card"><div class="row"><div><h2 id="welcome">Portal</h2><p id="roleline" class="muted"></p></div><div><button class="alt" onclick="logout()">Logout</button></div></div></div>
- <div class="card"><h2>Notices</h2><div id="notices"></div></div>
- <div class="card"><h2>My Classes</h2><div id="classes"></div></div>
- <div class="card"><h2>Study Material</h2><div id="materials"></div></div>
- <div class="card"><h2>Private message to Admin</h2><textarea id="msgtext" placeholder="अपना message लिखें"></textarea><button onclick="sendAdminMessage()">Admin को message भेजें</button><div id="messages"></div></div>
- <div id="teacherArea" class="hidden">
-  <div class="card"><h2>Teacher: Assigned students</h2><div id="assigned"></div></div>
-  <div class="card"><h2>Upload study material</h2>
-   <select id="matstudent"></select><input id="mattitle" placeholder="Material title"><input id="matcourse" placeholder="Course"><textarea id="matdesc" placeholder="Description"></textarea><input id="matfile" type="file" accept=".pdf,image/*,audio/mpeg,video/mp4,.docx"><button onclick="uploadMaterial()">Upload material</button><p class="muted">केवल assigned active student को material दिया जा सकता है। Max 50 MB.</p>
-  </div>
-  <div class="card"><h2>Teacher: Schedule one-to-one class</h2>
-   <select id="classstudent"></select><input id="classcourse" placeholder="Course"><div class="grid"><input id="classdate" type="date"><input id="classtime" type="time"></div><select id="provider"><option value="jitsi">Jitsi Meet</option><option value="google_meet">Google Meet</option></select><input id="meetingurl" placeholder="Meeting link (Jitsi / Google Meet)"><button onclick="scheduleClass()">Send class for Admin approval</button>
-  </div>
-  <div class="card"><h2>Teacher application</h2><p class="muted">Teacher role Admin approval के बाद ही सक्रिय होगा।</p><input id="tname" placeholder="Full name"><input id="tphone" placeholder="Phone"><input id="tcity" placeholder="City"><input id="tcountry" placeholder="Country"><input id="tsubjects" placeholder="Subjects (comma separated; Tabla नहीं)"><input id="tqual" placeholder="Qualification"><input id="texp" placeholder="Experience"><textarea id="tintro" placeholder="Introduction"></textarea><label><input id="tterms" type="checkbox" style="width:auto"> I accept academy terms and professional conduct rules</label><button onclick="applyTeacher()">Submit teacher application</button>
-  </div>
- </div>
- <div id="adminArea" class="hidden">
-  <div class="card"><h2>Admin: Students</h2><div id="adminstudents"></div>
-   <h3>Add / link student account</h3><p class="muted">पहले Supabase Dashboard → Authentication → Users में student user बनाएं। फिर उसका User UID यहाँ डालकर record link करें।</p>
-   <input id="suid" placeholder="Student Auth User UID (optional)"><input id="sname" placeholder="Student full name"><input id="semail" placeholder="Email"><input id="sphone" placeholder="Phone"><div class="grid"><input id="scountry" placeholder="Country"><input id="sstate" placeholder="State"><input id="scity" placeholder="City"></div><select id="scourse"><option>Tabla</option><option>Sitar</option><option>Guitar</option><option>Piano</option><option>Harmonium</option><option>Vocal</option></select><select id="sfee"><option value="1299">Tabla ₹1299</option><option value="1500">Other India ₹1500</option><option value="40">International $40</option><option value="80">International $80</option></select><select id="scurrency"><option>INR</option><option>USD</option></select><button onclick="addStudent()">Save student</button>
-  </div>
-  <div class="card"><h2>Admin: Teacher applications</h2><div id="adminteachers"></div></div>
-  <div class="card"><h2>Admin: Assign teacher</h2><select id="assignstudent"></select><select id="assignteacher"></select><button onclick="assignTeacher()">Assign teacher</button></div>
-  <div class="card"><h2>Admin: Class schedule</h2><div id="adminclasses"></div></div>
-  <div class="card"><h2>Admin: Payments</h2><div id="adminpayments"></div></div>
-  <div class="card"><h2>Admin: Publish notice</h2><input id="noticetitle" placeholder="Notice title"><textarea id="noticemsg" placeholder="Notice"></textarea><button onclick="publishNotice()">Publish</button></div>
-  <div class="card"><h2>Admin: Upload material</h2><select id="adminmatstudent"></select><input id="adminmattitle" placeholder="Material title"><input id="adminmatcourse" placeholder="Course"><input id="adminmatfile" type="file"><button onclick="adminUploadMaterial()">Upload for student</button></div>
- </div>
-</section>
-</main><footer>RPS Music Talim Academy • Help: gauravsr284@gmail.com • WhatsApp: 8317041705 / 9452848161</footer>
-<script>
-const SUPABASE_URL='https://nvaucusbviqpxyttimef.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_dO5mE_QfcvoUM6XgTNklvg_0npwI7h1';
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let user=null, role='student', adminId=null, students=[], teachers=[];
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function say(id,msg){$(id).textContent=msg}
-async function login(){let {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return say('authmsg',error.message);await boot(data.user)}
-async function signup(){let {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value});if(error)return say('authmsg',error.message);say('authmsg','Account request submitted. Email confirmation करें, फिर login करें।');}
-async function logout(){await db.auth.signOut();location.reload()}
-async function boot(u){user=u;let {data:rr,error}=await db.from('academy_user_roles').select('role').eq('user_id',u.id).single();if(error){say('authmsg','Role नहीं मिला। Supabase SQL setup और email verification जाँचें।');return}role=rr.role;
-$('public').classList.add('hidden');$('auth').classList.add('hidden');$('portal').classList.remove('hidden');$('welcome').textContent='Welcome, '+(u.email||'RPS member');$('roleline').textContent='Signed in as '+role;
-if(role==='admin'){$('adminArea').classList.remove('hidden');await loadAdmin()}
-if(role==='teacher'){$('teacherArea').classList.remove('hidden');await loadTeacher()}
-await loadCommon()}
-async function loadCommon(){
-let {data:n}=await db.from('academy_notices').select('*').eq('is_active',true).order('created_at',{ascending:false});$('notices').innerHTML=(n||[]).map(x=>`<div class="notice"><b>${esc(x.title)}</b><p>${esc(x.message)}</p></div>`).join('')||'No current notices';
-let q=db.from('academy_class_sessions').select('*').order('session_date');if(role==='student')q=q.eq('student_user_id',user.id);if(role==='teacher')q=q.eq('teacher_user_id',user.id);let {data:c}=await q;
-$('classes').innerHTML=(c||[]).map(x=>`<div class="item"><b>${esc(x.course)}</b> — ${esc(x.session_date)} ${esc(x.start_time)} (${x.duration_minutes} min)<br>${esc(x.meeting_provider)} · <a href="${esc(x.meeting_url)}" target="_blank" rel="noopener">Join class</a></div>`).join('')||'No classes scheduled';
-let {data:m}=await db.from('academy_study_materials').select('*').order('created_at',{ascending:false});
-$('materials').innerHTML=await Promise.all((m||[]).map(async x=>{let {data}=await db.storage.from('academy-study-materials').createSignedUrl(x.storage_path,300);return `<div class="item"><b>${esc(x.title)}</b> · ${esc(x.course)}<br>${data?.signedUrl?`<a href="${esc(data.signedUrl)}" target="_blank" rel="noopener">Open / Download</a>`:'Access unavailable'}</div>`})).then(a=>a.join(''))||'No material assigned';
-let {data:msgs}=await db.from('academy_messages').select('*').or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`).order('created_at');$('messages').innerHTML=(msgs||[]).map(x=>`<div class="item"><small>${x.sender_id===user.id?'You':'Admin'}:</small> ${esc(x.message)}</div>`).join('');
-}
-async function adminUid(){let {data}=await db.from('academy_user_roles').select('user_id').eq('role','admin').limit(1).single();return data?.user_id}
-async function sendAdminMessage(){let message=$('msgtext').value.trim();if(!message)return;let recipient=role==='admin'?null:await adminUid();if(role==='admin'){alert('Admin inbox view is via Messages table.');return}let {error}=await db.from('academy_messages').insert({sender_id:user.id,recipient_id:recipient,message});if(error)return alert(error.message);$('msgtext').value='';await loadCommon()}
-async function loadTeacher(){
-let {data:s}=await db.from('academy_students').select('user_id,full_name,course,status').eq('assigned_teacher_user_id',user.id).eq('status','active');students=s||[];
-['matstudent','classstudent'].forEach(id=>$(id).innerHTML=students.map(x=>`<option value="${x.user_id}">${esc(x.full_name)} — ${esc(x.course)}</option>`).join(''));
-$('assigned').innerHTML=students.map(x=>`<div class="item">${esc(x.full_name)} · ${esc(x.course)}</div>`).join('')||'No assigned students yet';
-}
-async function uploadFor(studentId,title,course,file,desc=''){if(!studentId||!file||!title||!course)return alert('Student, title, course और file भरें');let path=`${studentId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;let {error:up}=await db.storage.from('academy-study-materials').upload(path,file,{upsert:false});if(up)return alert('Upload error: '+up.message);let {error}=await db.from('academy_study_materials').insert({title,description:desc,course,student_user_id:studentId,storage_path:path,uploaded_by:user.id});if(error){await db.storage.from('academy-study-materials').remove([path]);return alert('Record error: '+error.message)}alert('Material uploaded');await loadCommon()}
-async function uploadMaterial(){await uploadFor($('matstudent').value,$('mattitle').value,$('matcourse').value,$('matfile').files[0],$('matdesc').value)}
-async function scheduleClass(){let p=$('provider').value,url=$('meetingurl').value.trim();if(!url.startsWith('https://'))return alert('Valid https meeting link डालें');let {error}=await db.from('academy_class_sessions').insert({student_user_id:$('classstudent').value,teacher_user_id:user.id,course:$('classcourse').value,session_date:$('classdate').value,start_time:$('classtime').value,duration_minutes:60,meeting_provider:p,meeting_url:url});if(error)return alert(error.message);alert('Class schedule saved. Admin/assigned student can view according to access rules.');await loadCommon()}
-async function applyTeacher(){let subjects=$('tsubjects').value.split(',').map(s=>s.trim()).filter(Boolean).filter(s=>s.toLowerCase()!=='tabla');let payload={user_id:user.id,full_name:$('tname').value,email:user.email,phone:$('tphone').value,country:$('tcountry').value,city:$('tcity').value,subjects,qualification:$('tqual').value,experience:$('texp').value,introduction:$('tintro').value,terms_accepted:$('tterms').checked};let {error}=await db.from('academy_teacher_applications').insert(payload);alert(error?error.message:'Application submitted for Admin review')}
-async function loadAdmin(){
-let {data:s}=await db.from('academy_students').select('*').order('created_at',{ascending:false});students=s||[];
-$('adminstudents').innerHTML=students.map(x=>`<div class="item"><b>${esc(x.full_name)}</b> · ${esc(x.course)} · ${esc(x.status)}<br>${esc(x.email)} · ${esc(x.city)}, ${esc(x.country)} · UID ${esc(x.user_id||'not linked')}</div>`).join('')||'No students';
-let {data:t}=await db.from('academy_teacher_applications').select('*').order('created_at',{ascending:false});$('adminteachers').innerHTML=(t||[]).map(x=>`<div class="item"><b>${esc(x.full_name)}</b> · ${esc(x.subjects?.join(', '))} · ${esc(x.application_status)}<br>${esc(x.qualification)} · ${esc(x.experience)}<br><button onclick="approveTeacher('${x.id}','${x.user_id}','${esc(x.full_name)}','${esc(x.email||'')}','${esc(x.phone||'')}','${esc(x.country||'')}','${esc(x.city||'')}','${esc((x.subjects||[]).join('|'))}','${esc(x.qualification||'')}','${esc(x.experience||'')}','${esc(x.introduction||'')}')">Approve teacher</button></div>`).join('')||'No applications';
-let {data:tt}=await db.from('academy_teachers').select('user_id,full_name');teachers=tt||[];$('assignstudent').innerHTML=students.filter(x=>x.user_id).map(x=>`<option value="${x.user_id}">${esc(x.full_name)} — ${esc(x.course)}</option>`).join('');$('assignteacher').innerHTML=teachers.map(x=>`<option value="${x.user_id}">${esc(x.full_name)}</option>`).join('');
-let {data:c}=await db.from('academy_class_sessions').select('*').order('session_date');$('adminclasses').innerHTML=(c||[]).map(x=>`<div class="item">${esc(x.course)} · ${esc(x.session_date)} ${esc(x.start_time)} · ${esc(x.meeting_provider)} · <a href="${esc(x.meeting_url)}" target="_blank">Link</a></div>`).join('')||'No class schedules';
-let {data:p}=await db.from('academy_payments').select('*').order('created_at',{ascending:false});$('adminpayments').innerHTML=(p||[]).map(x=>`<div class="item">${esc(x.student_user_id)} · ${x.currency} ${x.amount} · ${esc(x.payment_status)} · ${esc(x.transaction_reference)}<br><button onclick="verifyPayment('${x.id}','verified')">Verify</button> <button class="alt" onclick="verifyPayment('${x.id}','rejected')">Reject</button></div>`).join('')||'No payment records';
-$('adminmatstudent').innerHTML=students.filter(x=>x.user_id).map(x=>`<option value="${x.user_id}">${esc(x.full_name)}</option>`).join('');
-}
-async function addStudent(){let uid=$('suid').value.trim()||null;let {error}=await db.from('academy_students').insert({user_id:uid,full_name:$('sname').value,email:$('semail').value,phone:$('sphone').value,country:$('scountry').value,state:$('sstate').value,city:$('scity').value,course:$('scourse').value,monthly_fee:Number($('sfee').value),currency:$('scurrency').value,status:uid?'active':'pending'});if(error)return alert(error.message);alert('Student record saved');await loadAdmin()}
-async function assignTeacher(){let {error}=await db.from('academy_students').update({assigned_teacher_user_id:$('assignteacher').value,status:'active'}).eq('user_id',$('assignstudent').value);if(error)return alert(error.message);alert('Teacher assigned');await loadAdmin()}
-async function approveTeacher(id,uid,name,email,phone,country,city,subjects,qualification,experience,introduction){let {error:e}=await db.from('academy_user_roles').upsert({user_id:uid,role:'teacher'});if(e)return alert('Role update: '+e.message);let {error}=await db.from('academy_teachers').upsert({user_id:uid,full_name:name,email,phone,country,city,subjects:subjects.split('|').filter(Boolean),qualification,experience,introduction});if(error)return alert(error.message);await db.from('academy_teacher_applications').update({application_status:'approved'}).eq('id',id);alert('Teacher approved');await loadAdmin()}
-async function publishNotice(){let {error}=await db.from('academy_notices').insert({title:$('noticetitle').value,message:$('noticemsg').value});if(error)return alert(error.message);alert('Notice published');await loadCommon()}
-async function adminUploadMaterial(){await uploadFor($('adminmatstudent').value,$('adminmattitle').value,$('adminmatcourse').value,$('adminmatfile').files[0])}
-async function verifyPayment(id,status){let {error}=await db.from('academy_payments').update({payment_status:status}).eq('id',id);if(error)return alert(error.message);await loadAdmin()}
-db.auth.getSession().then(({data})=>{if(data.session)boot(data.session.user)});
-</script></body></html>
+<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- GLOBAL TOAST NOTIFICATION -->
+    <div id="toast-box" class="fixed bottom-5 right-5 z-50 hidden max-w-sm px-5 py-3.5 rounded-xl shadow-2xl border border-amber-400/50 bg-slate-900/95 text-amber-300 text-xs font-semibold flex items-center gap-3">
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- TOP PROMOTIONAL BANNER -->
+    <div class="gold-grad text-slate-950 font-bold py-2 px-4 text-xs md:text-sm shadow-md flex flex-wrap justify-between items-center gap-2">
+        <div class="mx-auto flex items-center gap-2">
+            <span>🪔</span>
+            <span id="top-banner-text">Aaj hi register kare aur RPS family connect ho! | 100% 1-to-1 Individual Classes (60 Mins)</span>
+        </div>
+        <div class="flex gap-1.5 items-center">
+            <button onclick="switchLang('hi')" class="px-2.5 py-0.5 bg-slate-950 text-amber-400 rounded text-[11px] font-bold">हिंदी</button>
+            <button onclick="switchLang('en')" class="px-2.5 py-0.5 bg-slate-950 text-white rounded text-[11px] font-bold">ENG</button>
+        </div>
+    </div>
+
+    <!-- LIVE DAILY NOTICE BAR -->
+    <div class="bg-amber-950/60 border-b border-amber-500/30 py-2 px-4 text-xs text-amber-200 flex items-center gap-3">
+        <span class="bg-amber-500 text-slate-950 font-extrabold px-2 py-0.5 rounded uppercase tracking-wider text-[10px] shrink-0">Daily Notice</span>
+        <marquee id="live-notice-bar" class="font-medium">RPS Music Talim Academy में आपका स्वागत है...</marquee>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <header class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40 px-4 lg:px-10 py-3.5 flex flex-wrap justify-between items-center gap-4">
+        <div class="cursor-pointer" onclick="navTo('view-home')">
+            <h1 class="text-lg md:text-2xl font-extrabold font-royal gold-text tracking-wide">RPS MUSIC TALIM ACADEMY</h1>
+            <p class="text-[11px] text-amber-400/90 font-medium">Founder: Swargiya Rajani Priya Ji | Kashi (Varanasi)</p>
+        </div>
+
+        <nav class="flex flex-wrap items-center gap-2">
+            <button onclick="navTo('view-home')" class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 text-slate-200 transition">Home</button>
+            <button onclick="navTo('view-courses')" class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 text-slate-200 transition">Courses & Fees</button>
+            <button onclick="navTo('view-student-reg')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 border border-amber-500/40 text-amber-300 hover:bg-amber-500/25 transition">Student Register (₹49)</button>
+            <button onclick="navTo('view-teacher-reg')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25 transition">Teacher Apply</button>
+            <button onclick="navTo('view-materials')" class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 text-slate-200 transition">Study Material</button>
+            <button id="btn-nav-dashboard" onclick="returnToActiveDashboard()" class="hidden px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow">My Dashboard</button>
+            <button id="btn-nav-login" onclick="navTo('view-login')" class="px-4 py-1.5 rounded-lg text-xs font-extrabold gold-grad text-slate-950 shadow-md">Portal Login</button>
+            <button id="btn-nav-logout" onclick="logoutUser()" class="hidden px-3.5 py-1.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-500 text-white">Logout</button>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="flex-grow">
+
+        <!-- ==================== 1. HOME VIEW ==================== -->
+        <section id="view-home" class="space-y-14 pb-16">
+            <!-- Hero with Kashi Ghat -->
+            <div class="kashi-bg py-20 px-4 text-center border-b border-amber-500/20">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-semibold">
+                        <span>✨ काशी की पवित्र संगीत परंपरा • Online & Offline 1-to-1 Classes</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-extrabold font-royal gold-text leading-tight">
+                        RPS MUSIC TALIM ACADEMY
+                    </h2>
+                    <p class="text-base md:text-xl text-amber-300 font-semibold">
+                        Founder: Swargiya Rajani Priya Ji | Kashi
+                    </p>
+                    <p id="i18n-hero-desc" class="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                        बच्चों और बड़ों के लिए व्यक्तिगत (One-to-One) संगीत प्रशिक्षण। प्रत्येक क्लास पूरे 60 मिनट की होती है—कोई ग्रुप क्लास नहीं। भारतीय एवं अंतर्राष्ट्रीय (International) दोनों विद्यार्थियों के लिए प्रवेश प्रारंभ।
+                    </p>
+
+                    <!-- Offer Badge -->
+                    <div class="inline-block glass px-7 py-4 rounded-2xl border border-amber-400/50 shadow-2xl">
+                        <p class="text-xs uppercase tracking-widest text-slate-400">Special Registration Fee</p>
+                        <p class="text-2xl font-extrabold text-amber-400 mt-1">
+                            Indian Students: <span class="line-through text-red-400 text-base mr-1">₹99</span> <span class="text-3xl text-emerald-400">₹49 Only</span>
+                        </p>
+                        <p class="text-xs text-blue-300 mt-1">International Students Registration: $5 USD Only</p>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center gap-4 pt-3">
+                        <button onclick="navTo('view-student-reg')" class="px-7 py-3.5 rounded-xl gold-grad text-slate-950 font-extrabold text-sm shadow-xl hover:scale-105 transition">
+                            🎓 Register on Website Portal (₹49)
+                        </button>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxq/viewform?usp=header" target="_blank" class="px-6 py-3.5 rounded-xl bg-slate-900/90 border border-amber-500/50 text-amber-300 font-bold text-sm hover:bg-slate-800 transition">
+                            📝 Fill Official Google Form
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kashi Ghat Heritage Section -->
+            <div class="max-w-6xl mx-auto px-4">
+                <div class="glass rounded-3xl overflow-hidden grid md:grid-cols-2 items-center shadow-2xl">
+                    <div class="relative h-72 md:h-full">
+                        <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=85" alt="Kashi Ghat Varanasi" class="w-full h-full object-cover">
+                        <div class="absolute bottom-3 left-3 bg-slate-950/85 px-3 py-1 rounded-lg border border-amber-500/40 text-xs text-amber-300 font-semibold">
+                            📍 Kashi Ghat, Varanasi
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-10 space-y-4">
+                        <h3 class="text-2xl font-bold font-royal gold-text">काशी घाट की संगीत साधना और गुरु-शिष्य परंपरा</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            <strong>स्वर्गीय रजनी प्रिया जी</strong> के आशीर्वाद से स्थापित यह संस्थान संगीत के हर विद्यार्थी को व्यक्तिगत ध्यान (One-to-One 60 Min Session) देता है।
+                        </p>
+                        <div class="grid grid-cols-2 gap-3 pt-2 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+                                <p class="text-amber-400 font-bold">🥁 Tabla Special</p>
+                                <p class="text-slate-400 mt-0.5">Taught Exclusively by Academy Admin</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+                                <p class="text-emerald-400 font-bold">🎥 1-to-1 Live</p>
+                                <p class="text-slate-400 mt-0.5">60 Minutes Private Session (No Groups)</p>
+                            </div>
+                        </div>
+                        <div class="pt-3 flex flex-wrap gap-3">
+                            <a href="https://wa.me/918317041705" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs">
+                                💬 WhatsApp: 8317041705
+                            </a>
+                            <a href="https://wa.me/919452848161" target="_blank" class="px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs">
+                                📞 Alternate: 9452848161
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Faculty Cards (Strictly Subject Designations Only - Zero Personal Names) -->
+            <div class="max-w-6xl mx-auto px-4 space-y-6">
+                <div class="text-center space-y-1">
+                    <h3 class="text-2xl font-bold font-royal gold-text">ACADEMIC SUBJECT FACULTY</h3>
+                    <p class="text-xs text-slate-400">प्रत्येक विषय के लिए समर्पित विशेषज्ञ शिक्षक (1-to-1 Individual Training)</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🥁</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Tabla Teacher</h4>
+                        <p class="text-[11px] text-emerald-400 mt-1 font-semibold">Admin Exclusive</p>
+                    </div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🪕</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Sitar Teacher</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">60 Min 1-to-1 Class</p>
+                    </div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🎸</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Guitar Teacher</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">60 Min 1-to-1 Class</p>
+                    </div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🎹</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Piano Teacher</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">60 Min 1-to-1 Class</p>
+                    </div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🎼</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Harmonium Teacher</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">60 Min 1-to-1 Class</p>
+                    </div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-amber-500">
+                        <div class="text-3xl mb-2">🎤</div>
+                        <h4 class="font-bold text-amber-300 text-sm">Vocal Music Teacher</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">60 Min 1-to-1 Class</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. COURSES & FEE STRUCTURE VIEW ==================== -->
+        <section id="view-courses" class="hidden max-w-6xl mx-auto px-4 py-10 space-y-10">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-bold font-royal gold-text">Complete Courses & Fee Structure</h2>
+                <p class="text-xs text-slate-400">Available for Children & Adults • Beginner to Advanced • Strictly One-to-One (60 Mins)</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Tabla -->
+                <div class="glass p-6 rounded-2xl border-2 border-amber-500 relative">
+                    <span class="absolute top-3 right-3 bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Taught by Admin</span>
+                    <h3 class="text-xl font-bold text-amber-300">1. Tabla (तबला)</h3>
+                    <p class="text-3xl font-extrabold text-white mt-3">₹1,299 <span class="text-xs font-normal text-slate-400">/ month</span></p>
+                    <p class="text-xs text-emerald-400 mt-1 font-semibold">Registration Fee: ₹49 (Earlier ₹99)</p>
+                    <ul class="text-xs text-slate-300 space-y-2 mt-4 border-t border-slate-800 pt-4">
+                        <li>✅ Taught exclusively by Academy Admin</li>
+                        <li>✅ 60 Minutes One-to-One Session</li>
+                        <li>✅ Online & Offline Mode Available</li>
+                    </ul>
+                    <button onclick="navTo('view-student-reg')" class="w-full mt-5 py-2.5 rounded-xl gold-grad text-slate-950 font-bold text-xs">Enroll in Tabla</button>
+                </div>
+
+                <!-- Sitar, Guitar, Piano -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-amber-300">2. Sitar, Guitar & Piano</h3>
+                    <p class="text-3xl font-extrabold text-white mt-3">₹1,500 <span class="text-xs font-normal text-slate-400">/ month each</span></p>
+                    <p class="text-xs text-emerald-400 mt-1 font-semibold">Registration Fee: ₹49</p>
+                    <ul class="text-xs text-slate-300 space-y-2 mt-4 border-t border-slate-800 pt-4">
+                        <li>✅ Dedicated Subject Teacher</li>
+                        <li>✅ 60 Minutes One-to-One Session</li>
+                        <li>✅ Beginner to Progressive Level</li>
+                    </ul>
+                    <button onclick="navTo('view-student-reg')" class="w-full mt-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-xs">Enroll Now</button>
+                </div>
+
+                <!-- Harmonium & Vocal -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-amber-300">3. Harmonium & Vocal Music</h3>
+                    <p class="text-3xl font-extrabold text-white mt-3">₹1,500 <span class="text-xs font-normal text-slate-400">/ month each</span></p>
+                    <p class="text-xs text-emerald-400 mt-1 font-semibold">Registration Fee: ₹49</p>
+                    <ul class="text-xs text-slate-300 space-y-2 mt-4 border-t border-slate-800 pt-4">
+                        <li>✅ Dedicated Subject Teacher</li>
+                        <li>✅ 60 Minutes One-to-One Session</li>
+                        <li>✅ Classical, Sugam & Light Vocal</li>
+                    </ul>
+                    <button onclick="navTo('view-student-reg')" class="w-full mt-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-xs">Enroll Now</button>
+                </div>
+            </div>
+
+            <!-- International & UPI Box -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl border border-blue-500/40 space-y-2">
+                    <h3 class="text-lg font-bold text-blue-300">🌍 International Students Fee Structure</h3>
+                    <p class="text-xs text-slate-300">• <strong>Registration Fee:</strong> $5 USD</p>
+                    <p class="text-xs text-slate-300">• <strong>Monthly Course Fee:</strong> $40 – $80 USD / month (Configurable by Admin)</p>
+                    <p class="text-xs text-slate-400">• Flexible Time-Zone scheduling with 60-minute 1-to-1 live sessions.</p>
+                </div>
+
+                <div class="glass p-6 rounded-2xl border border-emerald-500/40 space-y-2">
+                    <h3 class="text-lg font-bold text-emerald-300">💳 Official UPI Payment Gateway</h3>
+                    <p class="text-xs text-slate-300">Payee Name: <strong>RPS Talim Music Academy</strong></p>
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-amber-400 text-sm font-bold select-all">
+                        UPI ID: gauravsr284@oksbi
+                    </div>
+                    <p class="text-[11px] text-slate-400">पेमेंट के बाद स्क्रीनशॉट या UTR नंबर रजिस्ट्रेशन फॉर्म या Student Portal में अपलोड करें।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. STUDENT REGISTRATION VIEW ==================== -->
+        <section id="view-student-reg" class="hidden max-w-3xl mx-auto px-4 py-10">
+            <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold font-royal gold-text">Student Registration Portal</h2>
+                        <p class="text-xs text-slate-400">Registration Fee: ₹49 (Indian) | $5 (International) • UPI: gauravsr284@oksbi</p>
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxq/viewform?usp=header" target="_blank" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow">
+                        🔗 Alternate Google Form
+                    </a>
+                </div>
+
+                <form onsubmit="registerStudent(event)" class="grid md:grid-cols-2 gap-4 text-xs">
+       
