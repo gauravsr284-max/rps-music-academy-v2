@@ -1,140 +1,372 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { supabase } from './lib/supabase'
 
 const GOOGLE_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSf0LnUDfFoRV8BWZFwrqTOB75QaOUamDQqoOqdCwAwLF98kxQ/viewform?usp=header'
 
 const courses = [
-  { name: 'Tabla', hindi: 'तबला', fee: '₹1,299 / month', detail: 'Indian classical percussion training' },
-  { name: 'Sitar', hindi: 'सितार', fee: '₹1,500 / month', detail: 'Traditional instrumental learning' },
-  { name: 'Guitar', hindi: 'गिटार', fee: '₹1,500 / month', detail: 'Beginner to advanced lessons' },
-  { name: 'Piano', hindi: 'पियानो', fee: '₹1,500 / month', detail: 'Structured keyboard training' },
-  { name: 'Harmonium', hindi: 'हारमोनियम', fee: '₹1,500 / month', detail: 'Practical music education' },
-  { name: 'Vocal', hindi: 'गायन', fee: '₹1,500 / month', detail: 'Voice and classical music training' }
+  { name: 'Tabla', hindi: 'तबला', fee: '₹1,299 / month' },
+  { name: 'Sitar', hindi: 'सितार', fee: '₹1,500 / month' },
+  { name: 'Guitar', hindi: 'गिटार', fee: '₹1,500 / month' },
+  { name: 'Piano / Harmonium', hindi: 'पियानो / हारमोनियम', fee: '₹1,500 / month' },
+  { name: 'Vocal Music', hindi: 'गायन', fee: '₹1,500 / month' }
 ]
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState(null)
+  const [role, setRole] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [mode, setMode] = useState('login')
+  const [message, setMessage] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [counts, setCounts] = useState({})
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user || null)
+      setLoading(false)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user || null)
+        if (event === 'PASSWORD_RECOVERY') {
+          setMode('reset')
+          setLoginOpen(true)
+          setMessage('अपना नया पासवर्ड बनाएँ।')
+        }
+      }
+    )
+
+    return () => listener.subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    async function loadRole() {
+      if (!user) {
+        setRole('')
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('academy_user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (!error) setRole(data?.role || 'student')
+      else setRole('student')
+    }
+
+    loadRole()
+  }, [user])
+
+  useEffect(() => {
+    async function loadCounts() {
+      if (role !== 'admin') return
+
+      const tables = [
+        'academy_students',
+        'academy_student_applications',
+        'academy_teachers',
+        'academy_teacher_applications',
+        'academy_payments',
+        'academy_class_sessions'
+      ]
+
+      const result = {}
+      for (const table of tables) {
+        const { count, error } = await supabase
+          .from(table)
+          .select('*', { count: 'exact', head: true })
+
+        result[table] = error ? '—' : count
+      }
+      setCounts(result)
+    }
+
+    loadCounts()
+  }, [role])
+
+  async function handleLogin(e) {
+    e.preventDefault()
+    setBusy(true)
+    setMessage('')
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password
+    })
+
+    setBusy(false)
+    if (error) setMessage(error.message)
+    else {
+      setLoginOpen(false)
+      setPassword('')
+    }
+  }
+
+  async function handleForgotPassword(e) {
+    e.preventDefault()
+    setBusy(true)
+    setMessage('')
+
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      email.trim(),
+      { redirectTo: window.location.origin }
+    )
+
+    setBusy(false)
+    setMessage(
+      error
+        ? error.message
+        : 'यदि यह ईमेल पंजीकृत है, तो पासवर्ड रीसेट लिंक भेज दिया गया है। अपना Inbox और Spam फ़ोल्डर देखें।'
+    )
+  }
+
+  async function handleChangePassword(e) {
+    e.preventDefault()
+    setMessage('')
+
+    if (newPassword.length < 12) {
+      setMessage('नया पासवर्ड कम से कम 12 अक्षरों का रखें।')
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      setMessage('दोनों पासवर्ड एक जैसे नहीं हैं।')
+      return
+    }
+
+    setBusy(true)
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    })
+    setBusy(false)
+
+    if (error) {
+      setMessage(error.message)
+    } else {
+      setMessage('पासवर्ड सफलतापूर्वक बदल गया।')
+      setNewPassword('')
+      setConfirmPassword('')
+      setMode('login')
+    }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    setUser(null)
+    setRole('')
+    setLoginOpen(false)
+    setMode('login')
+    setMessage('आप लॉगआउट हो गए हैं।')
+  }
+
+  const styles = `
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #101010; color: #f5f0e6; font-family: Arial, sans-serif; }
+    .app { min-height: 100vh; }
+    .nav { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:18px 6%; border-bottom:1px solid #51432b; }
+    .brand { color:#e6c27a; font-size:20px; font-weight:bold; }
+    .btn { display:inline-block; border:0; border-radius:7px; padding:12px 18px; background:#d7ad62; color:#17120a; font-weight:bold; cursor:pointer; text-decoration:none; }
+    .btn.secondary { background:transparent; color:#e6c27a; border:1px solid #b18b4e; }
+    .hero { padding:75px 7%; text-align:center; background:linear-gradient(140deg,#201b13,#101010); }
+    .hero h1 { color:#e6c27a; font-size:clamp(32px,6vw,56px); margin:10px 0; }
+    .hero p { color:#d6d0c4; line-height:1.8; max-width:720px; margin:15px auto 25px; }
+    .section { padding:45px 7%; }
+    .section h2 { color:#e6c27a; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:15px; }
+    .card { background:#1d1b17; border:1px solid #51432b; padding:20px; border-radius:12px; }
+    .card h3 { color:#e6c27a; }
+    .muted { color:#bcb5a8; line-height:1.7; }
+    .footer { padding:25px; text-align:center; border-top:1px solid #51432b; color:#aaa; }
+    .panel { max-width:600px; margin:35px auto; padding:25px; background:#1d1b17; border:1px solid #51432b; border-radius:12px; }
+    .field { width:100%; padding:13px; margin:8px 0 15px; border-radius:7px; border:1px solid #766344; background:#111; color:white; font-size:16px; }
+    .message { padding:12px; margin:12px 0; border-radius:7px; background:#302819; color:#f1d79f; overflow-wrap:anywhere; }
+    .link { color:#e6c27a; background:none; border:0; padding:10px 0; cursor:pointer; text-decoration:underline; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+    .stat { background:#211d16; border:1px solid #51432b; border-radius:10px; padding:17px; }
+    .stat strong { display:block; color:#e6c27a; font-size:25px; margin-top:8px; }
+    @media(max-width:600px) { .nav { padding:14px 4%; } .brand { font-size:16px; } .hero { padding:55px 5%; } .section { padding:35px 5%; } }
+  `
+
+  if (loading) {
+    return <div className="panel">Loading Academy...</div>
+  }
+
   return (
-    <div className="site">
-      <header className="site-header">
-        <a className="brand" href="#home">
-          <span className="brand-mark">RPS</span>
-          <span>
-            <strong>RPS Music Academy</strong>
-            <small> BANARAS</small>
-          </span>
-        </a>
+    <div className="app">
+      <style>{styles}</style>
 
-        <nav>
-          <a href="#home">Home</a>
-          <a href="#courses">Courses</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
-
-        <a className="header-apply" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">
-          Apply Now
-        </a>
+      <header className="nav">
+        <div className="brand">RPS MUSIC ACADEMY</div>
+        {user ? (
+          <button className="btn secondary" onClick={handleLogout}>Logout</button>
+        ) : (
+          <button className="btn secondary" onClick={() => {
+            setMode('login')
+            setMessage('')
+            setLoginOpen(true)
+          }}>Academy Login</button>
+        )}
       </header>
 
-      <main>
-        <section className="hero" id="home">
-          <p className="eyebrow">MUSIC EDUCATION • BANARAS</p>
-          <h1>Discover the Art of <span>Indian Music</span></h1>
-          <p className="hero-text">
-            Learn music with dedication, discipline and expert guidance.
-            Classes are available online and offline for children and adults.
-          </p>
+      {user ? (
+        <main className="section">
+          <div className="panel">
+            <p className="muted">Welcome to your Academy Dashboard</p>
+            <h2>{role === 'admin' ? 'Admin Dashboard' : role === 'teacher' ? 'Teacher Dashboard' : 'Student Dashboard'}</h2>
+            <p className="muted">Login: {user.email}</p>
+            <p className="muted">Account role: {role || 'Loading...'}</p>
 
-          <div className="hero-actions">
-            <a className="primary-button" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">
-              Register for Admission
-            </a>
-            <a className="secondary-button" href="#courses">Explore Courses</a>
+            <button className="btn" onClick={() => {
+              setMode('change')
+              setMessage('')
+            }}>Change Password</button>
+
+            {mode === 'change' && (
+              <form onSubmit={handleChangePassword}>
+                <h3>Change Password</h3>
+                <input className="field" type="password" placeholder="New password (minimum 12 characters)" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                <input className="field" type="password" placeholder="Confirm new password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+                <button className="btn" disabled={busy}>{busy ? 'Please wait...' : 'Update Password'}</button>
+                <button type="button" className="link" onClick={() => setMode('login')}>Cancel</button>
+              </form>
+            )}
           </div>
 
-          <p className="hero-note">Beginner to advanced • Children to adults • Online and offline</p>
-        </section>
+          {role === 'admin' && (
+            <div className="panel">
+              <h2>Academy Overview</h2>
+              <div className="stats">
+                {[
+                  ['Students', 'academy_students'],
+                  ['Student Applications', 'academy_student_applications'],
+                  ['Teachers', 'academy_teachers'],
+                  ['Teacher Applications', 'academy_teacher_applications'],
+                  ['Payments', 'academy_payments'],
+                  ['Class Sessions', 'academy_class_sessions']
+                ].map(([label, key]) => (
+                  <div className="stat" key={key}>
+                    {label}
+                    <strong>{counts[key] ?? '...'}</strong>
+                  </div>
+                ))}
+              </div>
+              <p className="muted">यह शुरुआती Overview है। Applications approval, payments management, classes और notices के controls अगले चरण में जोड़ेंगे।</p>
+            </div>
+          )}
 
-        <section className="notice-section">
-          <span>ACADEMY NOTICE</span>
-          <p>Admissions are open. Register today and become a part of the RPS Music Academy family.</p>
-        </section>
+          {role !== 'admin' && (
+            <div className="panel">
+              <h2>Your Academy Space</h2>
+              <p className="muted">आपका Dashboard login सक्रिय है। आपकी profile और assigned class सुविधाएँ अगले चरण में जोड़ी जाएँगी।</p>
+            </div>
+          )}
+        </main>
+      ) : (
+        <main>
+          <section className="hero">
+            <p className="muted">In the memory of Swargiya Rajani Priya Ji</p>
+            <h1>RPS Music Academy – Banaras</h1>
+            <p>भारतीय शास्त्रीय संगीत की परंपरा और अनुशासन के साथ संगीत सीखें। Online और Offline classes, बच्चों से बड़ों तक, Beginner से Advanced स्तर तक।</p>
+            <a className="btn" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">Apply for Admission</a>
+          </section>
 
-        <section className="section" id="courses">
-          <p className="eyebrow">OUR PROGRAMMES</p>
-          <h2>Explore Our Courses</h2>
-          <p className="section-intro">
-            Choose your instrument or vocal programme and begin your musical journey.
-          </p>
+          <section className="section">
+            <h2>Our Courses | हमारे कोर्स</h2>
+            <div className="cards">
+              {courses.map(course => (
+                <div className="card" key={course.name}>
+                  <h3>{course.name}</h3>
+                  <p>{course.hindi}</p>
+                  <p className="muted">{course.fee}</p>
+                  <a className="link" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">Register</a>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          <div className="course-grid">
-            {courses.map((course) => (
-              <article className="course-card" key={course.name}>
-                <span className="course-hindi">{course.hindi}</span>
-                <h3>{course.name}</h3>
-                <p>{course.detail}</p>
-                <strong>{course.fee}</strong>
-                <a href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">
-                  Apply for this course →
-                </a>
-              </article>
-            ))}
-          </div>
-        </section>
+          <section className="section">
+            <h2>Learn With Us</h2>
+            <p className="muted">One-to-one music learning, dedicated guidance, and a focus on strong musical foundations.</p>
+            <a className="btn" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">Register Now</a>
+          </section>
 
-        <section className="section about-section" id="about">
-          <p className="eyebrow">ABOUT THE ACADEMY</p>
-          <h2>Music, Learning and Dedication</h2>
-          <p>
-            RPS Music Academy – Banaras is dedicated to providing structured
-            music education in a supportive learning environment. Our programmes
-            welcome learners of different ages and experience levels.
-          </p>
-          <p>
-            Students can learn through online or offline classes, subject to
-            course and teacher availability.
-          </p>
-          <p className="founder">In the memory of Swargiya Rajani Priya Ji</p>
-        </section>
+          <section className="section">
+            <h2>Contact the Academy</h2>
+            <p>Email: gauravsr284@gmail.com</p>
+            <p>WhatsApp: 8317041705 / 9452848161</p>
+            <a className="btn" href="https://wa.me/918317041705" target="_blank" rel="noreferrer">Contact on WhatsApp</a>
+          </section>
+        </main>
+      )}
 
-        <section className="admission-section">
-          <p className="eyebrow">ADMISSIONS</p>
-          <h2>Begin Your Musical Journey</h2>
-          <p>
-            Student registration is completed through our official Google Form.
-            Submit your details there for admission review.
-          </p>
-          <p>Registration fee: ₹49 for Indian applicants | $5 for international applicants</p>
-          <a className="primary-button" href={GOOGLE_FORM_URL} target="_blank" rel="noreferrer">
-            Open Registration Form
-          </a>
-        </section>
-
-        <section className="section contact-section" id="contact">
-          <p className="eyebrow">GET IN TOUCH</p>
-          <h2>Contact the Academy</h2>
-          <p>Email: gauravsr284@gmail.com</p>
-          <p>WhatsApp: 8317041705 / 9452848161</p>
-          <a
-            className="primary-button"
-            href="https://wa.me/918317041705"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Contact on WhatsApp
-          </a>
-        </section>
-      </main>
-
-      <footer>
+      <footer className="footer">
         <strong>RPS Music Academy – Banaras</strong>
         <p>Music education with dedication and discipline.</p>
         <small>© {new Date().getFullYear()} RPS Music Academy. All rights reserved.</small>
       </footer>
+
+      {loginOpen && !user && (
+        <div style={{position:'fixed', inset:0, background:'#000c', zIndex:10, overflowY:'auto', padding:'20px'}}>
+          <div className="panel">
+            <button className="link" onClick={() => {
+              setLoginOpen(false)
+              setMessage('')
+            }}>← Close</button>
+
+            {mode === 'reset' ? (
+              <>
+                <h2>Set New Password</h2>
+                <form onSubmit={handleChangePassword}>
+                  <input className="field" type="password" placeholder="New password (minimum 12 characters)" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                  <input className="field" type="password" placeholder="Confirm new password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+                  <button className="btn" disabled={busy}>{busy ? 'Please wait...' : 'Save New Password'}</button>
+                </form>
+              </>
+            ) : mode === 'forgot' ? (
+              <>
+                <h2>Forgot Password</h2>
+                <form onSubmit={handleForgotPassword}>
+                  <label>Email address</label>
+                  <input className="field" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Your registered email" required />
+                  <button className="btn" disabled={busy}>{busy ? 'Sending...' : 'Send Reset Link'}</button>
+                </form>
+                <button className="link" onClick={() => {
+                  setMode('login')
+                  setMessage('')
+                }}>Back to Login</button>
+              </>
+            ) : (
+              <>
+                <h2>Academy Login</h2>
+                <form onSubmit={handleLogin}>
+                  <label>Email address</label>
+                  <input className="field" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Registered email" required />
+                  <label>Password</label>
+                  <input className="field" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
+                  <button className="btn" disabled={busy}>{busy ? 'Signing in...' : 'Login'}</button>
+                </form>
+                <button className="link" onClick={() => {
+                  setMode('forgot')
+                  setMessage('')
+                }}>Forgot Password?</button>
+              </>
+            )}
+
+            {message && <div className="message">{message}</div>}
+          </div>
+        </div>
+      )}
     </div>
   )
-}
-
-export default App
-      
+        }
+    
