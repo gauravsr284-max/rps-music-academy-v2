@@ -365,8 +365,7 @@ export default function App() {
             {message && <div className="message">{message}</div>}
           </div>
         </div>
-      )}
-        </div>
+            )}
+    </div>
   )
 }
-    
